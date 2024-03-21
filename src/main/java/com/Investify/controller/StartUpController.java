@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Investify.model.InvestorInfo;
 import com.Investify.model.StartUpInfo;
+import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
 
@@ -28,6 +31,10 @@ public class StartUpController {
 	
 	@Autowired
 	StartUpRepository startUpRepository;
+	
+	@Autowired
+	InvestorInfoRepository investorInfoRepository;
+	
 	
 	@PostMapping("/saveData")
     public String saveData(
@@ -105,5 +112,17 @@ public class StartUpController {
 	public Optional<InvestorInfo> getCredentials(@RequestParam("username") String username, @RequestParam("password") String password) {
 		return startUpService.getCredentials(username,password);
 	}
+	
+	@DeleteMapping("/delete-investor")
+	public ResponseEntity<?> deleteInvestor(@RequestParam("username") String username){
+		startUpService.deleteByUsername(username);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("/add-startup")
+    public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
+        startUpService.addStartupName(username, password, startupName);
+        return ResponseEntity.ok().build();
+    }
 	
 }

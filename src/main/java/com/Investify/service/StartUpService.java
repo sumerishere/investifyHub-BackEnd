@@ -197,6 +197,54 @@ public class StartUpService {
 	}
 	
 	
+	public void deleteByUsername(String username) {
+		investorInfoRepository.deleteByUsername(username);
+	}
+	
+	
+	
+	public void addStartupName(String username, String password, String startupName) {
+        // Find InvestorInfo by username and password
+        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsernameAndPassword(username, password);
+
+        // Check if InvestorInfo with given username and password exists
+        if (investorInfoOptional.isPresent()) {
+            InvestorInfo investorInfo = investorInfoOptional.get();
+            
+            // Retrieve the existing startupname list
+            List<String> startupNames = investorInfo.getStartupname();
+            
+            // Check if the list already contains the startup name
+            if (startupNames == null || !startupNames.contains(startupName)) {
+                // Initialize the list if null
+                if (startupNames == null) {
+                    startupNames = new ArrayList<>();
+                }
+                
+                // Add the new startup name to the list
+                startupNames.add(startupName);
+                
+                // Set the updated list of startup names to the InvestorInfo entity
+                investorInfo.setStartupname(startupNames);
+                
+                // Save the updated InvestorInfo
+                investorInfoRepository.save(investorInfo);
+            } else {
+                // Handle case where the startup name already exists in the list
+                // For example, you can log a message or return an appropriate response
+                System.out.println("Startup name already exists in the list.");
+            }
+        } else {
+            // Handle case where InvestorInfo with the provided username and password does not exist
+            // Possibly throw an exception or return an appropriate response
+        }
+	}
+	
+	
+	 
+	 
+	             //---------------Authentication------------------//
+	
 	public Optional<InvestorInfo> getCredentials(String username, String password){
 		
 		

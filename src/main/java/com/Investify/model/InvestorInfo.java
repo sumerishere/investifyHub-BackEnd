@@ -3,6 +3,7 @@ package com.Investify.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +26,9 @@ public class InvestorInfo {
 	
 //	private String panId;
 	
-	private String startupname;
+	@Column(name = "startupname", columnDefinition = "LONGTEXT")
+	private List<String> startupname;
+	
 	private String investmentAmount;
 	 
 	private String username;
@@ -36,10 +39,11 @@ public class InvestorInfo {
 	private StartUpInfo startUpInfo;
 	
 	
+	
 
 	public InvestorInfo() {}   //empty constructor
 	
-	public InvestorInfo(Long id, String name, String mobileNo, String mailId, String startupname,
+	public InvestorInfo(Long id, String name, String mobileNo, String mailId, List<String> startupname,
 			String investmentAmount, String username, String password, StartUpInfo startUpInfo) {
 		this.id = id;
 		this.name = name;
@@ -87,13 +91,13 @@ public class InvestorInfo {
 		this.mailId = mailId;
 	}
 
-	public String getStartupname() {
+	public List<String> getStartupname() {
 		return startupname;
 	}
 
 
-	public void setStartupname(String startupname) {
-		this.startupname = startupname;
+	public void setStartupname(List<String> startupNames) {
+		this.startupname = startupNames;
 	}
 
 	public String getInvestmentAmount() {

@@ -85,30 +85,40 @@ public class StartUpInfo {
 	public List<InvestorInfo> getInvestorInfos() {
 		return investorInfos;
 	}
+	
+	
 	public void setInvestorInfos(List<InvestorInfo> investorInfos) {
 		this.investorInfos = investorInfos;
 	}
+	
 	public String getCompanyImage() {
 		return companyImage;
 	}
+	
 	public void setCompanyImage(String companyImage) {
 		this.companyImage = companyImage;
 	}
+	
 	public String getIndustry() {
 		return industry;
 	}
+	
 	public void setIndustry(String industry) {
 		this.industry = industry;
 	}
+	
 	public String getCeoLink() {
 		return ceoLink;
 	}
+	
 	public void setCeoLink(String ceoLink) {
 		this.ceoLink = ceoLink;
 	}
+	
 	public String getCtoLink() {
 		return ctoLink;
 	}
+	
 	public void setCtoLink(String ctoLink) {
 		this.ctoLink = ctoLink;
 	}
