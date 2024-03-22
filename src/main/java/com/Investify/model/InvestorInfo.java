@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,9 +25,9 @@ public class InvestorInfo {
 	private String mobileNo;
 	private String mailId;
 	
-//	private String panId;
 	
-	@Column(name = "startupname", columnDefinition = "LONGTEXT")
+	@ElementCollection
+	@Column(name = "startupname")   
 	private List<String> startupname;
 	
 	private String investmentAmount;

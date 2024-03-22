@@ -3,10 +3,14 @@ package com.Investify.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +21,8 @@ import com.Investify.model.InvestorInfo;
 import com.Investify.model.StartUpInfo;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
@@ -203,43 +209,95 @@ public class StartUpService {
 	
 	
 	
-	public void addStartupName(String username, String password, String startupName) {
-        // Find InvestorInfo by username and password
-        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsernameAndPassword(username, password);
-
-        // Check if InvestorInfo with given username and password exists
-        if (investorInfoOptional.isPresent()) {
-            InvestorInfo investorInfo = investorInfoOptional.get();
-            
-            // Retrieve the existing startupname list
-            List<String> startupNames = investorInfo.getStartupname();
-            
-            // Check if the list already contains the startup name
-            if (startupNames == null || !startupNames.contains(startupName)) {
-                // Initialize the list if null
-                if (startupNames == null) {
-                    startupNames = new ArrayList<>();
-                }
-                
-                // Add the new startup name to the list
-                startupNames.add(startupName);
-                
-                // Set the updated list of startup names to the InvestorInfo entity
-                investorInfo.setStartupname(startupNames);
-                
-                // Save the updated InvestorInfo
-                investorInfoRepository.save(investorInfo);
-            } else {
-                // Handle case where the startup name already exists in the list
-                // For example, you can log a message or return an appropriate response
-                System.out.println("Startup name already exists in the list.");
-            }
-        } else {
-            // Handle case where InvestorInfo with the provided username and password does not exist
-            // Possibly throw an exception or return an appropriate response
-        }
-	}
+//	public void addStartupName(String username, String password, String startupName) {
+//        
+//        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsernameAndPassword(username, password);
+//
+//        
+//        if (investorInfoOptional.isPresent()) {
+//            InvestorInfo investorInfo = investorInfoOptional.get();
+//            
+//            List<String> startupNames = investorInfo.getStartupname();
+//            
+//           
+//            if (startupNames == null || !startupNames.contains(startupName)) {
+//            	
+//                // Initialize the list if null
+//                if (startupNames == null) {
+//                    startupNames = new ArrayList<>();
+//                }
+//                
+//                startupNames.add(startupName);
+//                
+//                // Set the updated list of startup names to the InvestorInfo entity
+//                investorInfo.setStartupname(startupNames);
+// 
+//                
+//                // Save the updated InvestorInfo
+//                try {
+//                	
+//                    investorInfoRepository.save(investorInfo);
+//                    System.out.println("Startup name added successfully.");
+//                }
+//                catch (Exception e) {
+//                    System.out.println("Failed to save InvestorInfo: " + e.getMessage());
+//                }
+//                
+//            } else {
+//             
+//                System.out.println("Startup name already exists in the list.");
+//            }
+//        } 
+//        else {
+//       
+//        	System.out.println("InvestorInfo not found for the given username and password.");
+//        }
+//        
+//        System.out.println("startup saved Successfully!");
+//        
+//	}
 	
+	
+	@Transactional
+	public ResponseEntity<String> addStartupName(String username, String password, String startupName) {
+	    Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+
+	    if (investorInfoOptional.isPresent()) {
+	        InvestorInfo investorInfo = investorInfoOptional.get();
+	        
+	        // Check if provided password matches the hashed password stored in the database
+	        if (passwordEncoder.matches(password, investorInfo.getPassword())) {
+	            List<String> startupNames = investorInfo.getStartupname();
+	            
+	            if (startupNames == null || !startupNames.contains(startupName)) {
+	                if (startupNames == null) {
+	                    startupNames = new ArrayList<>();
+	                }
+	                
+	                startupNames.add(startupName);
+	                investorInfo.setStartupname(startupNames);
+	                
+	                try {
+	                    investorInfoRepository.save(investorInfo);
+	                    System.out.println("Startup name added successfully.");
+	                    return new ResponseEntity<>("Startup name added successfully.", HttpStatus.OK);
+	                } catch (Exception e) {
+	                    System.out.println("Failed to save InvestorInfo: " + e.getMessage());
+	                    return new ResponseEntity<>("Failed to save InvestorInfo: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	                }
+	            } else {
+	                System.out.println("Startup name already exists in the list.");
+	                return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
+	            }
+	        } else {
+	            System.out.println("Incorrect password.");
+	            return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
+	        }
+	    } else {
+	        System.out.println("InvestorInfo not found for the given username.");
+	        return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
+	    }
+	}
 	
 	 
 	 
