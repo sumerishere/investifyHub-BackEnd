@@ -186,10 +186,9 @@ public class StartUpService {
 			return "Already Exist Username.";
 			
 		}
-		
 		 // Encode the investor password before saving
-        String encodedPassword = passwordEncoder.encode(info.getPassword());
-        info.setPassword(encodedPassword);
+                 String encodedPassword = passwordEncoder.encode(info.getPassword());
+                 info.setPassword(encodedPassword);
 		
 		//	if(info.getStartupname()!=null) {
 		//		
@@ -199,7 +198,6 @@ public class StartUpService {
 		
 		investorInfoRepository.save(info);
 		return "save succesfully";
-	
 	}
 	
 	
@@ -281,19 +279,23 @@ public class StartUpService {
 	                    investorInfoRepository.save(investorInfo);
 	                    System.out.println("Startup name added successfully.");
 	                    return new ResponseEntity<>("Startup name added successfully.", HttpStatus.OK);
-	                } catch (Exception e) {
+	                } 
+			catch (Exception e) {
 	                    System.out.println("Failed to save InvestorInfo: " + e.getMessage());
 	                    return new ResponseEntity<>("Failed to save InvestorInfo: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	                }
-	            } else {
+	            } 
+		    else {
 	                System.out.println("Startup name already exists in the list.");
 	                return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
 	            }
-	        } else {
+	        } 
+		else {
 	            System.out.println("Incorrect password.");
 	            return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
 	        }
-	    } else {
+	    } 
+	    else {
 	        System.out.println("InvestorInfo not found for the given username.");
 	        return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
 	    }
@@ -304,8 +306,6 @@ public class StartUpService {
 	             //---------------Authentication------------------//
 	
 	public Optional<InvestorInfo> getCredentials(String username, String password){
-		
-		
 	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(username);
 
 	    if (investorUsername.isPresent()) {
@@ -317,7 +317,6 @@ public class StartUpService {
 	            return Optional.of(investor);
 	        }
 	    }
-
 	    // if investor not found or password does not match, return null
 	    return Optional.empty();
 		
