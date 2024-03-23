@@ -120,9 +120,9 @@ public class StartUpController {
 	}
 	
 	@PutMapping("/add-startup")
-    public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
-        startUpService.addStartupName(username, password, startupName);
-        return ResponseEntity.ok().build();
+        public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
+        	startUpService.addStartupName(username, password, startupName);
+       		return ResponseEntity.ok().build();
     }
 	
 }
