@@ -100,7 +100,7 @@ public class StartUpController {
 	
 	@PostMapping("/saveInvestorInfo")
 	public String saveInvestor(@RequestBody InvestorInfo info) {
-		return startUpService.saveInvestor(info);
+		return startUpService.saveInvestor(info.getName(),info.getMobileNo(),info.getMailId(),info.getUsername(),info.getPassword());
 	}
 	
 	@GetMapping("/get-all-investors")
@@ -119,10 +119,15 @@ public class StartUpController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PutMapping("/add-startup")
-    public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
-        startUpService.addStartupName(username, password, startupName);
-        return ResponseEntity.ok().build();
-    }
-	
+//	@PutMapping("/add-startup")
+//    public ResponseEntity<?> updateStartupName(
+//    		@RequestParam("startupname") String startupName,
+//    		@RequestParam("investmentAmount") String investmentAmount,
+//    		@RequestParam("username") String username, 
+//    		@RequestParam("password")String password ){
+//        startUpService.addStartupName(startupName, investmentAmount, username, password);
+//        
+//        return ResponseEntity.ok().build();
+//    }
 }
+

@@ -74,22 +74,22 @@ public class StartUpInfo {
 	//industry
 	private String industry;
 	
-	@OneToMany(mappedBy = "startUpInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<InvestorInfo> investorInfos = new ArrayList<>();
+//	@OneToMany(mappedBy = "startUpInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    private List<InvestorInfo> investorInfos = new ArrayList<>();
 	
 	
 	
 	
 	
 	
-	public List<InvestorInfo> getInvestorInfos() {
-		return investorInfos;
-	}
+//	public List<InvestorInfo> getInvestorInfos() {
+//		return investorInfos;
+//	}
+//	
 	
-	
-	public void setInvestorInfos(List<InvestorInfo> investorInfos) {
-		this.investorInfos = investorInfos;
-	}
+//	public void setInvestorInfos(List<InvestorInfo> investorInfos) {
+//		this.investorInfos = investorInfos;
+//	}
 	
 	public String getCompanyImage() {
 		return companyImage;

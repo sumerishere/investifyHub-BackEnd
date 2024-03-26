@@ -6,6 +6,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,35 +27,39 @@ public class InvestorInfo {
 	private String mailId;
 	
 	
-	@ElementCollection
-	@Column(name = "startupname")   
-	private List<String> startupname;
+//	@ElementCollection
+//	@Column(name = "startupname")   
+//	private List<String> startupname;
 	
-	private String investmentAmount;
+	
+//	@Column(name = "investmentAmount")   
+//	private String investmentAmount;
 	 
 	private String username;
 	private String password;
 	
-	@ManyToOne
-	@JoinColumn(name = "start_up_info_id")
-	private StartUpInfo startUpInfo;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "start_up_info_id")
+//    private StartUpInfo startUpInfo;
 	
-	
+//	@ManyToOne
+//	@JoinColumn(name = "start_up_info_id")
+//	private StartUpInfo startUpInfo;	
 	
 
 	public InvestorInfo() {}   //empty constructor
 	
-	public InvestorInfo(Long id, String name, String mobileNo, String mailId, List<String> startupname,
-			String investmentAmount, String username, String password, StartUpInfo startUpInfo) {
+	public InvestorInfo(Long id, String name, String mobileNo, String mailId, 
+		 String username, String password ) {  //StartUpInfo startUpInfo
 		this.id = id;
 		this.name = name;
 		this.mobileNo = mobileNo;
 		this.mailId = mailId;
-		this.startupname = startupname;
-		this.investmentAmount = investmentAmount;
+//		this.startupname = startupname;
+//		this.investmentAmount = investmentAmount;
 		this.username = username;
 		this.password = password;
-		this.startUpInfo = startUpInfo;
+//		this.startUpInfo = startUpInfo;
 		
 	}
 
@@ -92,23 +97,23 @@ public class InvestorInfo {
 		this.mailId = mailId;
 	}
 
-	public List<String> getStartupname() {
-		return startupname;
-	}
+//	public List<String> getStartupname() {
+//		return startupname;
+//	}
 
 
-	public void setStartupname(List<String> startupNames) {
-		this.startupname = startupNames;
-	}
+//	public void setStartupname(List<String> startupNames) {
+//		this.startupname = startupNames;
+//	}
+//
+//	public String getInvestmentAmount() {
+//		return investmentAmount;
+//	}
 
-	public String getInvestmentAmount() {
-		return investmentAmount;
-	}
 
-
-	public void setInvestmentAmount(String investmentAmount) {
-		this.investmentAmount = investmentAmount;
-	}
+//	public void setInvestmentAmount(String investmentAmount) {
+//		this.investmentAmount = investmentAmount;
+//	}
 
 
 	public String getUsername() {
@@ -128,13 +133,13 @@ public class InvestorInfo {
 		this.password = password;
 	}
 
-	public StartUpInfo getStartUpInfo() {
-		return startUpInfo;
-	}
-
-	public void setStartUpInfo(StartUpInfo startUpInfo) {
-		this.startUpInfo = startUpInfo;
-	}
+//	public StartUpInfo getStartUpInfo() {
+//		return startUpInfo;
+//	}
+//
+//	public void setStartUpInfo(StartUpInfo startUpInfo) {
+//		this.startUpInfo = startUpInfo;
+//	}
 	
 	
 }
