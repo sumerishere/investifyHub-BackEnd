@@ -187,6 +187,7 @@ public class StartUpService {
 			return "Already Exist Username.";
 			
 		}
+<<<<<<< HEAD
 		
 		InvestorInfo info = new InvestorInfo();
 		info.setName(name);
@@ -195,14 +196,15 @@ public class StartUpService {
 		info.setUsername(username);
 		info.setPassword(password);
 		
+=======
+>>>>>>> 84c49ca4d8cb4a1f209ee999572ad945a3227476
 		 // Encode the investor password before saving
-        String encodedPassword = passwordEncoder.encode(info.getPassword());
-        info.setPassword(encodedPassword);
+                 String encodedPassword = passwordEncoder.encode(info.getPassword());
+                 info.setPassword(encodedPassword);
 		
 		
 		investorInfoRepository.save(info);
 		return "save succesfully";
-	
 	}
 	
 	
@@ -261,6 +263,7 @@ public class StartUpService {
 //	}
 	
 	
+<<<<<<< HEAD
 //	@Transactional
 //	public ResponseEntity<String> addStartupName(String startupName, String investmentAmount, String username, String password ) {
 //	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(username);
@@ -306,13 +309,58 @@ public class StartUpService {
 //	    }
 //	}
 //	
+=======
+	@Transactional
+	public ResponseEntity<String> addStartupName(String username, String password, String startupName) {
+	    Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+
+	    if (investorInfoOptional.isPresent()) {
+	        InvestorInfo investorInfo = investorInfoOptional.get();
+	        
+	        // Check if provided password matches the hashed password stored in the database
+	        if (passwordEncoder.matches(password, investorInfo.getPassword())) {
+	            List<String> startupNames = investorInfo.getStartupname();
+	            
+	            if (startupNames == null || !startupNames.contains(startupName)) {
+	                if (startupNames == null) {
+	                    startupNames = new ArrayList<>();
+	                }
+	                
+	                startupNames.add(startupName);
+	                investorInfo.setStartupname(startupNames);
+	                
+	                try {
+	                    investorInfoRepository.save(investorInfo);
+	                    System.out.println("Startup name added successfully.");
+	                    return new ResponseEntity<>("Startup name added successfully.", HttpStatus.OK);
+	                } 
+			catch (Exception e) {
+	                    System.out.println("Failed to save InvestorInfo: " + e.getMessage());
+	                    return new ResponseEntity<>("Failed to save InvestorInfo: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	                }
+	            } 
+		    else {
+	                System.out.println("Startup name already exists in the list.");
+	                return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
+	            }
+	        } 
+		else {
+	            System.out.println("Incorrect password.");
+	            return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
+	        }
+	    } 
+	    else {
+	        System.out.println("InvestorInfo not found for the given username.");
+	        return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
+	    }
+	}
+	
+>>>>>>> 84c49ca4d8cb4a1f209ee999572ad945a3227476
 	 
 	 
 	             //---------------Authentication------------------//
 	
 	public Optional<InvestorInfo> getCredentials(String username, String password){
-		
-		
 	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(username);
 
 	    if (investorUsername.isPresent()) {
@@ -324,7 +372,6 @@ public class StartUpService {
 	            return Optional.of(investor);
 	        }
 	    }
-
 	    // if investor not found or password does not match, return null
 	    return Optional.empty();
 		
