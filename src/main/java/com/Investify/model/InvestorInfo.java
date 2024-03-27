@@ -1,5 +1,6 @@
 package com.Investify.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -26,40 +27,24 @@ public class InvestorInfo {
 	private String mobileNo;
 	private String mailId;
 	
-	
-//	@ElementCollection
-//	@Column(name = "startupname")   
-//	private List<String> startupname;
-	
-	
-//	@Column(name = "investmentAmount")   
-//	private String investmentAmount;
-	 
 	private String username;
 	private String password;
+		
 	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "start_up_info_id")
-//    private StartUpInfo startUpInfo;
-	
-//	@ManyToOne
-//	@JoinColumn(name = "start_up_info_id")
-//	private StartUpInfo startUpInfo;	
+	@OneToMany(mappedBy = "investorInfo", cascade = CascadeType.ALL)
+    private List<AddStartUp> startUps = new ArrayList<>();
 	
 
-	public InvestorInfo() {}   //empty constructor
+	public InvestorInfo() {}   
 	
 	public InvestorInfo(Long id, String name, String mobileNo, String mailId, 
-		 String username, String password ) {  //StartUpInfo startUpInfo
+		 String username, String password ) {  
 		this.id = id;
 		this.name = name;
 		this.mobileNo = mobileNo;
 		this.mailId = mailId;
-//		this.startupname = startupname;
-//		this.investmentAmount = investmentAmount;
 		this.username = username;
 		this.password = password;
-//		this.startUpInfo = startUpInfo;
 		
 	}
 
@@ -97,29 +82,10 @@ public class InvestorInfo {
 		this.mailId = mailId;
 	}
 
-//	public List<String> getStartupname() {
-//		return startupname;
-//	}
-
-
-//	public void setStartupname(List<String> startupNames) {
-//		this.startupname = startupNames;
-//	}
-//
-//	public String getInvestmentAmount() {
-//		return investmentAmount;
-//	}
-
-
-//	public void setInvestmentAmount(String investmentAmount) {
-//		this.investmentAmount = investmentAmount;
-//	}
-
 
 	public String getUsername() {
 		return username;
 	}
-
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -132,14 +98,6 @@ public class InvestorInfo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-//	public StartUpInfo getStartUpInfo() {
-//		return startUpInfo;
-//	}
-//
-//	public void setStartUpInfo(StartUpInfo startUpInfo) {
-//		this.startUpInfo = startUpInfo;
-//	}
 	
 	
 }

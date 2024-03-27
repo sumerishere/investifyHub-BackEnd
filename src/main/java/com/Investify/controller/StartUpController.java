@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Investify.model.InvestorInfo;
 import com.Investify.model.StartUpInfo;
+import com.Investify.repository.AddStartUpRepository;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
@@ -34,6 +35,9 @@ public class StartUpController {
 	
 	@Autowired
 	InvestorInfoRepository investorInfoRepository;
+	
+	@Autowired  
+	AddStartUpRepository  addStartUpRepository;
 	
 	
 	@PostMapping("/saveData")
@@ -113,30 +117,30 @@ public class StartUpController {
 		return startUpService.getCredentials(username,password);
 	}
 	
+	
 	@DeleteMapping("/delete-investor")
-	public ResponseEntity<?> deleteInvestor(@RequestParam("username") String username){
-		startUpService.deleteByUsername(username);
+	public ResponseEntity<?> deleteInvestor(@RequestParam("username") String username, @RequestParam("password") String password){
+		startUpService.deleteByUsername(username,password);
 		return ResponseEntity.ok().build();
 	}
 	
-<<<<<<< HEAD
-//	@PutMapping("/add-startup")
-//    public ResponseEntity<?> updateStartupName(
-//    		@RequestParam("startupname") String startupName,
-//    		@RequestParam("investmentAmount") String investmentAmount,
-//    		@RequestParam("username") String username, 
-//    		@RequestParam("password")String password ){
-//        startUpService.addStartupName(startupName, investmentAmount, username, password);
-//        
-//        return ResponseEntity.ok().build();
-//    }
-=======
+
 	@PutMapping("/add-startup")
-        public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
-        	startUpService.addStartupName(username, password, startupName);
-       		return ResponseEntity.ok().build();
+    public ResponseEntity<?> updateStartupName(
+    		@RequestParam("startupName") String startupname,
+    		@RequestParam("investmentAmount") String investmentAmount,
+    		@RequestParam("username") String username, 
+    		@RequestParam("password")String password ){
+        startUpService.addStartupName(startupname, investmentAmount, username, password);
+        
+        return ResponseEntity.ok().build();
     }
-	
->>>>>>> 84c49ca4d8cb4a1f209ee999572ad945a3227476
+
+//	@PutMapping("/add-startup")
+//        public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
+//        	startUpService.addStartupName(username, password, startupName);
+//       		return ResponseEntity.ok().build();
+//    }
+//	
 }
 

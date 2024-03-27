@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class AddStartUp {
@@ -11,21 +13,21 @@ public class AddStartUp {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String startupname;
 	private String investmentAmount;
-	
-	private String username;
-	private String password;
-	
+		
+	@ManyToOne
+	@JoinColumn(name = "investor_id")
+	private InvestorInfo investorInfo;
 	
 	
 	public AddStartUp() {}
 	
-	public AddStartUp(String startupname,String investmentAmount ,String username,String password) {
+	public AddStartUp(String startupname,String investmentAmount, InvestorInfo investorInfo) {
 		this.startupname = startupname;
 		this.investmentAmount = investmentAmount;
-		this.username = username;
-		this.password = password;
+		this.investorInfo = investorInfo;
 	}
 	
 	
@@ -41,19 +43,14 @@ public class AddStartUp {
 	public void setInvestmentAmount(String investmentAmount) {
 		this.investmentAmount = investmentAmount;
 	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	
+	public InvestorInfo getInvestorInfo() {
+        return investorInfo;
+    }
+
+    public void setInvestorInfo(InvestorInfo investorInfo) {
+        this.investorInfo = investorInfo;
+    }
 	
 	
 }

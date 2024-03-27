@@ -16,20 +16,12 @@ public interface InvestorInfoRepository extends JpaRepository<InvestorInfo,Long>
 	
 	public Optional<InvestorInfo> findByUsernameAndPassword(String username, String password);
 	
-//	public Optional<List<InvestorInfo>> findByUsername(String username);
-	
 	public Optional<InvestorInfo> findByUsername(String username);
-
 
 	public Optional<InvestorInfo> findByMailId(String mailId);
 	
-	public void deleteByUsername(String username);
 	
-
-	
-//    @Modifying
-//    @Query("DELETE FROM InvestorInfo i WHERE i.username = :username AND i.start_up_info_id IS NULL")
-//    public void deleteByUsername(@Param("username") String username);
+//	public void deleteByUsername(String username, String password);
 	
 
 }
