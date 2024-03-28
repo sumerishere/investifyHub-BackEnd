@@ -176,6 +176,7 @@ public class StartUpService {
 		
 	}
 	
+	
          //---------POST API of Investor----------//
 	
 	public String saveInvestor(String name, String mobileNo, String mailId, String username, String password) {
@@ -284,6 +285,31 @@ public class StartUpService {
 	   }
 	
 	 
+	  
+	  public List<AddStartUp> getAllStartUp(){
+			return addStartUpRepository.findAll();
+			
+	  } 
+	  
+	  
+//	  public AddStartUp getOneStartup(Long id) {
+//		  
+//		  Optional<AddStartUp> addStartUpGet = addStartUpRepository.findById(id);
+//		  
+//		  if (addStartUpGet.isPresent()) {
+//			  
+//		      return addStartUpGet.get();
+//          } 
+//		  else {
+//			  
+//		        return null;
+//		    }
+//		}
+	  
+	  public List<AddStartUp> getAllStartupsByInvestorId(Long investorId) {
+	        return addStartUpRepository.findByInvestorInfoId(investorId);
+	    }
+
 	 
 	             //---------------Authentication------------------//
 	

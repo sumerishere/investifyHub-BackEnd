@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Investify.model.AddStartUp;
 import com.Investify.model.InvestorInfo;
 import com.Investify.model.StartUpInfo;
 import com.Investify.repository.AddStartUpRepository;
@@ -79,6 +80,9 @@ public class StartUpController {
         // Create a Startup object
        return startUpService.saveData(companyName, title, desc, pitch, wti, ceoName, ctoName, boardMemberName, ceoInfo, ctoInfo, boardInfo, ppr, valuation, fundingGoal, deadline, minInvest, maxInvest, nofS, oft, ast, shareOf, raised, investor, pitchImage, wtiImage, ceoImage, ctoImage, boardImage,ceoLink,ctoLink,boardLink,industry,companyImage);
     }
+	
+	
+	
 	@GetMapping("/get-all")
 	public List<StartUpInfo> getAll(){
 		return startUpService.getAll();
@@ -135,12 +139,41 @@ public class StartUpController {
         
         return ResponseEntity.ok().build();
     }
+	
+	
+	@GetMapping("/get-allStartup")
+	public List<AddStartUp> getAllStartUp(){
+		return startUpService.getAllStartUp();
+	}
+	
+//	@GetMapping("/one-startup")
+//	public ResponseEntity<?> getOneStartup(@RequestParam("id") Long id) {
+//		
+//	    AddStartUp addStartUp = startUpService.getOneStartup(id);
+//	    
+//	    if (addStartUp != null) {
+//	        return ResponseEntity.ok(addStartUp);
+//	    } 
+//	    else {
+//	        return ResponseEntity.notFound().build();
+//	    }
+//	}
+	
+	 @GetMapping("/id-startup")
+	    public ResponseEntity<?> getAllStartupsByInvestorId(@RequestParam("id") Long investorId) {
+		 
+	        List<AddStartUp> startups = startUpService.getAllStartupsByInvestorId(investorId);
+	        
+	        if (startups != null && !startups.isEmpty()) {
+	        	
+	            return ResponseEntity.ok(startups);
+	        } 
+	        else {
+	        	
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
 
-//	@PutMapping("/add-startup")
-//        public ResponseEntity<?> updateStartupName(@RequestParam("username") String username, @RequestParam("password")String password ,@RequestParam("startupname") String startupName){
-//        	startUpService.addStartupName(username, password, startupName);
-//       		return ResponseEntity.ok().build();
-//    }
-//	
+
 }
 

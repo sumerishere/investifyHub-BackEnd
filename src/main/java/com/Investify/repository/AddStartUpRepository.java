@@ -1,5 +1,6 @@
 package com.Investify.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import com.Investify.model.InvestorInfo;
 public interface AddStartUpRepository extends JpaRepository<AddStartUp,Long> {
 	
 	boolean existsByStartupnameAndInvestorInfo(String startupname, InvestorInfo investorInfo);
+	List<AddStartUp> findByInvestorInfoId(Long investorId);
 	
 
 }

@@ -21,7 +21,5 @@ public interface InvestorInfoRepository extends JpaRepository<InvestorInfo,Long>
 	public Optional<InvestorInfo> findByMailId(String mailId);
 	
 	
-//	public void deleteByUsername(String username, String password);
-	
 
 }
