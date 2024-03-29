@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class StartUpInfo {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -74,22 +75,7 @@ public class StartUpInfo {
 	//industry
 	private String industry;
 	
-//	@OneToMany(mappedBy = "startUpInfo", cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private List<InvestorInfo> investorInfos = new ArrayList<>();
 	
-	
-	
-	
-	
-	
-//	public List<InvestorInfo> getInvestorInfos() {
-//		return investorInfos;
-//	}
-//	
-	
-//	public void setInvestorInfos(List<InvestorInfo> investorInfos) {
-//		this.investorInfos = investorInfos;
-//	}
 	
 	public String getCompanyImage() {
 		return companyImage;

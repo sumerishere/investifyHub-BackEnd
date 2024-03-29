@@ -13,7 +13,8 @@ import com.Investify.model.InvestorInfo;
 public interface AddStartUpRepository extends JpaRepository<AddStartUp,Long> {
 	
 	boolean existsByStartupnameAndInvestorInfo(String startupname, InvestorInfo investorInfo);
+	
 	List<AddStartUp> findByInvestorInfoId(Long investorId);
 	
-
+	List<AddStartUp> findByInvestorInfo(InvestorInfo investorInfo);
 }

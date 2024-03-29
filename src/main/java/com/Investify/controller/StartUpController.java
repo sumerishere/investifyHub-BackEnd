@@ -88,14 +88,12 @@ public class StartUpController {
 		return startUpService.getAll();
 	}
 	
+	
 	@GetMapping("/getbyName")
 	public List<StartUpInfo> getByName(@RequestParam("cname") String sname){
 		
 		return startUpService.getByName(sname);
-		
-//		 List<StartUpInfo> matchedStartUps = startUpService.getByName(sname);
-//	        return ResponseEntity.ok(matchedStartUps);
-	}
+	}	
 	
 	@GetMapping("/getByIndustry")
 	public List<StartUpInfo> getByIndustryName(@RequestParam("ind") String industry){
@@ -146,34 +144,37 @@ public class StartUpController {
 		return startUpService.getAllStartUp();
 	}
 	
-//	@GetMapping("/one-startup")
-//	public ResponseEntity<?> getOneStartup(@RequestParam("id") Long id) {
-//		
-//	    AddStartUp addStartUp = startUpService.getOneStartup(id);
-//	    
-//	    if (addStartUp != null) {
-//	        return ResponseEntity.ok(addStartUp);
-//	    } 
-//	    else {
-//	        return ResponseEntity.notFound().build();
-//	    }
-//	}
 	
-	 @GetMapping("/id-startup")
-	    public ResponseEntity<?> getAllStartupsByInvestorId(@RequestParam("id") Long investorId) {
+//	 @GetMapping("/id-startup")
+//	    public ResponseEntity<?> getAllStartupsByInvestorId(@RequestParam("id") Long investorId) {
+//		 
+//	        List<AddStartUp> startups = startUpService.getAllStartupsByInvestorId(investorId);
+//	        
+//	        if (startups != null && !startups.isEmpty()) {
+//	        	
+//	            return ResponseEntity.ok(startups);
+//	        } 
+//	        else {
+//	        	
+//	            return ResponseEntity.notFound().build();
+//	        }
+//	    }
+	
+	
+	//-------- Login - Status-----//
+	 @GetMapping("/invested-startups")
+	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestParam("username") String username, @RequestParam("password") String hashedPassword) {
 		 
-	        List<AddStartUp> startups = startUpService.getAllStartupsByInvestorId(investorId);
-	        
-	        if (startups != null && !startups.isEmpty()) {
-	        	
-	            return ResponseEntity.ok(startups);
-	        } 
-	        else {
-	        	
+         List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(username, hashedPassword);
+         
+         if (startups != null && !startups.isEmpty()) {
+        	 
+        	 return ResponseEntity.ok(startups);
+        	 
+	     }
+         else {
 	            return ResponseEntity.notFound().build();
-	        }
-	    }
-
-
+	     }
+	 }
 }
 
