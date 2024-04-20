@@ -250,30 +250,7 @@ public class StartUpService {
 
 	            // Check if provided password matches the hashed password stored in the database
 	            if (passwordEncoder.matches(password, investorInfo.getPassword())) {
-
-//	                // Check if the startup name already exists for the investor
-//	                if (!addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo)) {
-//	                	
-//	                    AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount,investorInfo);
-//	                    
-//	                    addStartUp.setInvestorInfo(investorInfo);
-//
-//	                    try {
-//	                        addStartUpRepository.save(addStartUp);
-//	                        System.out.println("Startup added successfully.");
-//	                        return new ResponseEntity<>("Startup added successfully.", HttpStatus.OK);
-//	                    } 
-//	                    catch (Exception e) {
-//	                        System.out.println("Failed to save AddStartUp: " + e.getMessage());
-//	                        return new ResponseEntity<>("Failed to save AddStartUp: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//	                    }
-//	                } 
-//	                else {
-//	                    System.out.println("Startup name already exists in the list.");
-//	                    return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
-//	                }
-	            	//----------------------------------------------------------------------------//
-	            	
+  	
 	                // Check if the startup name already exists for the investor
 	                if (!addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo)) {
 
@@ -333,9 +310,17 @@ public class StartUpService {
 	       
 	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
 
-	        if (investorInfoOptional.isPresent() && passwordEncoder.matches(password, investorInfoOptional.get().getPassword())) {
+	        if (investorInfoOptional.isPresent()){
 	        	
-	            return addStartUpRepository.findByInvestorInfo(investorInfoOptional.get());
+	        	if(passwordEncoder.matches(password, investorInfoOptional.get().getPassword())) {
+	        		return addStartUpRepository.findByInvestorInfo(investorInfoOptional.get());
+	        	}
+	        	else {
+	        		System.out.println("Incorrect password!");
+	        	}
+	        }
+	        else {
+	        	System.out.println("Username Not Exist!! ");
 	        }
 
 	        return null; 

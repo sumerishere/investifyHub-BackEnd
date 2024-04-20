@@ -2,10 +2,13 @@ package com.Investify.controller;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,8 @@ import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @CrossOrigin("*")
 public class StartUpController {
@@ -39,6 +44,12 @@ public class StartUpController {
 	
 	@Autowired  
 	AddStartUpRepository  addStartUpRepository;
+
+	private final BCryptPasswordEncoder passwordEncoder;
+	@Autowired
+    public StartUpController(BCryptPasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
 	
 	
 	@PostMapping("/saveData")
@@ -126,6 +137,42 @@ public class StartUpController {
 		return ResponseEntity.ok().build();
 	}
 	
+	
+//	@PutMapping("/add-startup")
+//    public ResponseEntity<?> addStartupName(@RequestBody AddStartUp request) {
+//        String startupName = request.getStartupName();
+//        String investmentAmount = request.getInvestmentAmount();
+//        String username = request.getUsername();
+//        String password = request.getPassword();
+//
+//        // Find investor by username and validate password
+//        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+//        if (investorInfoOptional.isPresent()) {
+//            InvestorInfo investorInfo = investorInfoOptional.get();
+//            if (investorInfo.getPassword().equals(password)) {
+//                // Check if startupName already exists for the investor
+//                boolean startupExists = addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo);
+//                
+//                if (!startupExists) {
+//                    // Create new AddStartUp entity
+//                    AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount, investorInfo);
+//                    try {
+//                        addStartUpRepository.save(addStartUp);
+//                        return ResponseEntity.ok().build();
+//                    } 
+//                    catch (Exception e) {
+//                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//                    }
+//                } else {
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//                }
+//            } else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//    }
 
 	@PutMapping("/add-startup")
     public ResponseEntity<?> updateStartupName(
@@ -162,10 +209,10 @@ public class StartUpController {
 	
 	
 	//-------- Login - Status-----//
-	 @GetMapping("/invested-startups")
-	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestParam("username") String username, @RequestParam("password") String hashedPassword) {
-		 
-         List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(username, hashedPassword);
+	 @PostMapping("/invested-startups")
+	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
+		 System.out.println(request.getUsername()+" "+request.getPassword());
+         List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(request.getUsername(), request.getPassword());
          
          if (startups != null && !startups.isEmpty()) {
         	 
@@ -176,5 +223,7 @@ public class StartUpController {
 	            return ResponseEntity.notFound().build();
 	     }
 	 }
+	 
+	 
 }
 
