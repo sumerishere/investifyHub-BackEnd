@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,10 +116,16 @@ public class StartUpController {
 	//--------------  Investors APIs ---------//  
 	
 	
+//	@PostMapping("/saveInvestorInfo")
+//	public String saveInvestor(@RequestBody InvestorInfo info, @RequestPart("image") MultipartFile image) {
+//		return startUpService.saveInvestor(info,image);
+//	}
+	
 	@PostMapping("/saveInvestorInfo")
-	public String saveInvestor(@RequestBody InvestorInfo info) {
-		return startUpService.saveInvestor(info.getName(),info.getMobileNo(),info.getMailId(),info.getUsername(),info.getPassword());
-	}
+    public String saveInvestor(@RequestPart("info") InvestorInfo info,
+                               @RequestPart("image") MultipartFile image) {
+        return startUpService.saveInvestor(info, image);
+    }
 	
 	@GetMapping("/get-all-investors")
 	public List<InvestorInfo> getInvestorsData(){
@@ -209,9 +216,12 @@ public class StartUpController {
 	
 	
 	//-------- Login - Status-----//
+	
 	 @PostMapping("/invested-startups")
 	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
-		 System.out.println(request.getUsername()+" "+request.getPassword());
+		 
+//		 System.out.println(request.getUsername()+" "+request.getPassword());
+		 
          List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(request.getUsername(), request.getPassword());
          
          if (startups != null && !startups.isEmpty()) {

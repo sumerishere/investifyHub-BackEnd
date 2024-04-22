@@ -3,6 +3,8 @@ package com.Investify.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestPart;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -12,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -29,6 +32,10 @@ public class InvestorInfo {
 	
 	private String username;
 	private String password;
+	
+	@Lob
+	@Column(columnDefinition = "LONGBLOB")
+	private byte[] image;
 		
 	
 	@OneToMany(mappedBy = "investorInfo", cascade = CascadeType.ALL)
@@ -38,14 +45,14 @@ public class InvestorInfo {
 	public InvestorInfo() {}   
 	
 	public InvestorInfo(Long id, String name, String mobileNo, String mailId, 
-		 String username, String password ) {  
+		 String username, String password, byte[] image ) {  
 		this.id = id;
 		this.name = name;
 		this.mobileNo = mobileNo;
 		this.mailId = mailId;
 		this.username = username;
 		this.password = password;
-		
+		this.image = image;
 	}
 
 
@@ -98,6 +105,16 @@ public class InvestorInfo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+	
+	
 	
 	
 }

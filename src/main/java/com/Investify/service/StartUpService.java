@@ -1,5 +1,6 @@
 package com.Investify.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -138,7 +139,7 @@ public class StartUpService {
             }
             
 		} catch (Exception e) {
-			// TODO: handle exception
+			return "image required!!";
 		}
         
         startUpRepository.save(startup);
@@ -165,7 +166,7 @@ public class StartUpService {
 	}
 	
 	
-	                                       //--------------  Investors APIs ---------//
+	                                    //--------------  Investors APIs ---------//
 	
 	
 	
@@ -173,39 +174,70 @@ public class StartUpService {
 	
 	public List<InvestorInfo> getAllInvestors(){
 		return investorInfoRepository.findAll();
-		
 	}
 	
 	
          //---------POST API of Investor----------//
 	
-	public String saveInvestor(String name, String mobileNo, String mailId, String username, String password) {
-		
-		Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(username);
-		Optional<InvestorInfo> investorMailId = investorInfoRepository.findByMailId(mailId);
-		
-		if(investorMailId.isPresent() ) {
-			return "Already Exist Mail-Id";
-		}
-		
-		if(investorUsername.isPresent() ) {
-			return "Already Exist Username.";
-		}
-		
-		InvestorInfo info = new InvestorInfo();
-		info.setName(name);
-		info.setMobileNo(mobileNo);
-		info.setMailId(mailId);
-		info.setUsername(username);
-		info.setPassword(password);
 	
-		// Encode the investor password before saving
-        String encodedPassword = passwordEncoder.encode(info.getPassword());
-        info.setPassword(encodedPassword);
+	public String saveInvestor(InvestorInfo info, MultipartFile image) {
 		
-		investorInfoRepository.save(info);
-		return "save succesfully";
+	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(info.getUsername());
+	    Optional<InvestorInfo> investorMailId = investorInfoRepository.findByMailId(info.getMailId());
+
+	    if (investorMailId.isPresent()) {
+	        return "Already Exist Mail-Id";
+	    }
+
+	    if (investorUsername.isPresent()) {
+	        return "Already Exist Username.";
+	    }
+
+	    try {
+	        InvestorInfo newInfo = new InvestorInfo();
+	        newInfo.setName(info.getName());
+	        newInfo.setMobileNo(info.getMobileNo());
+	        newInfo.setMailId(info.getMailId());
+	        newInfo.setUsername(info.getUsername());
+	        newInfo.setPassword(info.getPassword());
+
+	        // Convert image to byte array
+	        byte[] imageBytes = image.getBytes();
+	        newInfo.setImage(imageBytes); 
+
+	        // Encode the investor password before saving
+	        String encodedPassword = passwordEncoder.encode(newInfo.getPassword());
+	        newInfo.setPassword(encodedPassword);
+
+	        investorInfoRepository.save(newInfo);
+	        return "save successfully";
+	    } 
+	    catch (IOException e) {
+	        e.printStackTrace();
+	        return "internal server error.";
+	    }
 	}
+	
+	
+	//---------------------------------------------//
+	
+//		InvestorInfo info = new InvestorInfo();
+//		info.setName(name);
+//		info.setMobileNo(mobileNo);
+//		info.setMailId(mailId);
+//		info.setUsername(username);
+//		info.setPassword(password);
+//		
+//		info.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+//	
+//		// Encode the investor password before saving
+//        String encodedPassword = passwordEncoder.encode(info.getPassword());
+//        info.setPassword(encodedPassword);
+//		
+//		investorInfoRepository.save(info);
+//		return "save succesfully";
+	
+//---------------------------------------------//
 	
 	
 	
@@ -292,8 +324,6 @@ public class StartUpService {
 	            return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
 	        }
 	   }
-	
-	 
 	  
 	  public List<AddStartUp> getAllStartUp(){
 			return addStartUpRepository.findAll();
@@ -306,6 +336,9 @@ public class StartUpService {
 //	    }
 	  
 	   
+	  
+	  //--------------- Login API -------------//
+	  
 	  public List<AddStartUp> getAllStartupsByUsernameAndPassword(String username, String password) {
 	       
 	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
@@ -322,7 +355,6 @@ public class StartUpService {
 	        else {
 	        	System.out.println("Username Not Exist!! ");
 	        }
-
 	        return null; 
 	    }
 
