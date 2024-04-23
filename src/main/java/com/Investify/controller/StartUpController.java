@@ -45,6 +45,8 @@ public class StartUpController {
 	
 	@Autowired  
 	AddStartUpRepository  addStartUpRepository;
+	
+	
 
 	private final BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -187,8 +189,18 @@ public class StartUpController {
     		@RequestParam("investmentAmount") String investmentAmount,
     		@RequestParam("username") String username, 
     		@RequestParam("password")String password ){
-        startUpService.addStartupName(startupname, investmentAmount, username, password);
+		
         
+        InvestorInfo info = startUpService.addStartupName(startupname, investmentAmount, username, password); 
+        System.out.println(info);
+        
+        try {
+        	
+        	startUpService.SendMail(info.getName(),info.getMailId(),startupname, investmentAmount);
+        }
+        	catch(Exception e){
+        	
+        }
         return ResponseEntity.ok().build();
     }
 	

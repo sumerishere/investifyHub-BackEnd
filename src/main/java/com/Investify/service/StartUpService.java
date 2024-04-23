@@ -12,6 +12,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +28,8 @@ import com.Investify.repository.AddStartUpRepository;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 
 
@@ -39,6 +44,44 @@ public class StartUpService {
 	
 	@Autowired
 	AddStartUpRepository addStartUpRepository;
+	
+	
+	@Autowired
+	JavaMailSender sender;
+	
+	
+//	public void SendMail(String to, String startName, String investmentAmount ) {
+//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//        simpleMailMessage.setTo(to);
+//        String subject = ""
+//        simpleMailMessage.setSubject();
+//        simpleMailMessage.setText("text");
+//        sender.send(simpleMailMessage);
+//	}
+	
+	
+	public void SendMail(String name,String to,String startupname,String investmentAmount) throws MessagingException,IOException{
+		
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(to.trim());
+        
+        String subject="You Investment Acknolewdgement!";
+        
+        simpleMailMessage.setSubject(subject);
+        
+        String body="Hi"+name +" \n\nCongratulation!! on you investment in "+startupname+" with "+investmentAmount 
+        		+"best \n\nregards InvestifyHub.in";
+        
+
+        MimeMessage mimeMessage = sender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(body);
+        
+        sender.send(mimeMessage);
+
+    }
 	
 	
 	private final BCryptPasswordEncoder passwordEncoder;
@@ -273,7 +316,7 @@ public class StartUpService {
 	//-------------PUT API of Investor ---------------//
 	
 	  @Transactional
-	  public ResponseEntity<String> addStartupName(String startupName, String investmentAmount, String username, String password) {
+	  public InvestorInfo addStartupName(String startupName, String investmentAmount, String username, String password) {
 
 	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
 
@@ -295,35 +338,40 @@ public class StartUpService {
 	                        addStartUp.setInvestorInfo(investorInfo);
 
 	                        try {
+	                        	
 	                            addStartUpRepository.save(addStartUp);
+	                            
 	                            System.out.println("Startup added successfully.");
-	                            return new ResponseEntity<>("Startup added successfully.", HttpStatus.OK);
+//	                            return new ResponseEntity<>("Startup added successfully.", HttpStatus.OK);
 	                        } 
 	                        catch (Exception e) {
 	                            System.out.println("Failed to save AddStartUp: " + e.getMessage());
-	                            return new ResponseEntity<>("Failed to save AddStartUp: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//	                            return new ResponseEntity<>("Failed to save AddStartUp: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	                        }
 	                    }
 	                    else {
 	                        System.out.println("Invalid startup name.");
-	                        return new ResponseEntity<>("Invalid startup name.", HttpStatus.BAD_REQUEST);
+//	                        return new ResponseEntity<>("Invalid startup name.", HttpStatus.BAD_REQUEST);
 	                    }
 	                } 
 	                else {
 	                    System.out.println("Startup name already exists in the list.");
-	                    return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
+//	                    return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
 	                }
 	            }
 	            else {
 	                System.out.println("Incorrect password.");
-	                return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
+//	                return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
 	            }
 	        }
 	        else {
 	            System.out.println("InvestorInfo not found for the given username.");
-	            return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
+//	            return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
 	        }
+	        return investorInfoOptional.get();
 	   }
+	  
+	  
 	  
 	  public List<AddStartUp> getAllStartUp(){
 			return addStartUpRepository.findAll();
