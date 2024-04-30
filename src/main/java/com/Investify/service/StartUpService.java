@@ -63,14 +63,15 @@ public class StartUpService {
 	public void SendMail(String name,String to,String startupname,String investmentAmount) throws MessagingException,IOException{
 		
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(to.trim());
+        simpleMailMessage.setTo(to);
         
-        String subject="You Investment Acknolewdgement!";
+        String subject="Your Investment Acknowledgement!";
         
         simpleMailMessage.setSubject(subject);
         
-        String body="Hi"+name +" \n\nCongratulation!! on you investment in "+startupname+" with "+investmentAmount 
-        		+"best \n\nregards InvestifyHub.in";
+        String body="Hi "+name +", \n\nCongratulations!!! on your investment in "+startupname+"\nInvested Amount : "+investmentAmount+
+        		". \n\nThanks For Choosing Us, Keep Expand Your Portfolio and Diversify Your Investments!!! " 
+        		+"\n\nBest regards,\nTeam InvestifyHub.in";
         
 
         MimeMessage mimeMessage = sender.createMimeMessage();
@@ -342,31 +343,25 @@ public class StartUpService {
 	                            addStartUpRepository.save(addStartUp);
 	                            
 	                            System.out.println("Startup added successfully.");
-//	                            return new ResponseEntity<>("Startup added successfully.", HttpStatus.OK);
 	                        } 
 	                        catch (Exception e) {
 	                            System.out.println("Failed to save AddStartUp: " + e.getMessage());
-//	                            return new ResponseEntity<>("Failed to save AddStartUp: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	                        }
 	                    }
 	                    else {
 	                        System.out.println("Invalid startup name.");
-//	                        return new ResponseEntity<>("Invalid startup name.", HttpStatus.BAD_REQUEST);
-	                    }
+                    }
 	                } 
 	                else {
-	                    System.out.println("Startup name already exists in the list.");
-//	                    return new ResponseEntity<>("Startup name already exists in the list.", HttpStatus.BAD_REQUEST);
+	                    System.out.println("Startup name already exists in the list.");   
 	                }
 	            }
 	            else {
 	                System.out.println("Incorrect password.");
-//	                return new ResponseEntity<>("Incorrect password.", HttpStatus.UNAUTHORIZED);
 	            }
 	        }
 	        else {
 	            System.out.println("InvestorInfo not found for the given username.");
-//	            return new ResponseEntity<>("InvestorInfo not found for the given username.", HttpStatus.NOT_FOUND);
 	        }
 	        return investorInfoOptional.get();
 	   }
