@@ -49,7 +49,6 @@ public class StartUpService {
 	@Autowired
 	JavaMailSender sender;
 	
-	
 //	public void SendMail(String to, String startName, String investmentAmount ) {
 //		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 //        simpleMailMessage.setTo(to);
@@ -59,6 +58,8 @@ public class StartUpService {
 //        sender.send(simpleMailMessage);
 //	}
 	
+	
+	// ----------- Mail Sender API ---------//
 	
 	public void SendMail(String name,String to,String startupname,String investmentAmount) throws MessagingException,IOException{
 		
@@ -71,7 +72,7 @@ public class StartUpService {
         
         String body="Hi "+name +", \n\nCongratulations!!! on your investment in "+startupname+"\nInvested Amount : "+investmentAmount+
         		". \n\nThanks For Choosing Us, Keep Expand Your Portfolio and Diversify Your Investments!!! " 
-        		+"\n\nBest regards,\nTeam InvestifyHub.in";
+        		+"\n\nBest regards,\nTeam InvestifyHub.in \n\n\n*** Please note that this is an automatically generated email that cannot receive replies ***";
         
 
         MimeMessage mimeMessage = sender.createMimeMessage();
@@ -263,7 +264,7 @@ public class StartUpService {
 	}
 	
 	
-	//---------------------------------------------//
+	//-------------------- without multipartfile -------------------------//
 	
 //		InvestorInfo info = new InvestorInfo();
 //		info.setName(name);
