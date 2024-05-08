@@ -129,6 +129,12 @@ public class StartUpController {
         return startUpService.saveInvestor(info, image);
     }
 	
+//	@PostMapping("/saveInvestorInfo")
+//	public String saveInvestor(@ModelAttribute InvestorInfo info,
+//	                           @RequestParam("image") MultipartFile image) {
+//	    return startUpService.saveInvestor(info, image);
+//	}
+	
 	@GetMapping("/get-all-investors")
 	public List<InvestorInfo> getInvestorsData(){
 		return startUpService.getAllInvestors();
