@@ -211,7 +211,70 @@ public class StartUpService {
 	}
 	
 	
-	                                    //--------------  Investors APIs ---------//
+	
+	//delete startup api
+	
+//	public boolean deleteStartUpByDetails(String startupname, String username, String password) {
+//		
+//		 Optional<InvestorInfo> investorDetails = investorInfoRepository.findByUsername(username);
+//         
+//		 if (investorDetails.isPresent()) {
+//			 
+//	            InvestorInfo investor = investorDetails.get();
+//	            
+//	            if (passwordEncoder.matches(password, investor.getPassword())) {
+//	            	
+//	            	Optional<AddStartUp> startupDetails = addStartUpRepository.existsByStartupnameAndInvestorInfo(String startupname, InvestorInfo investorInfo);
+//	            	AddStartUp startup = AddStartUp.get();
+//	            	
+//	            		addStartUpRepository.delete();
+//	                
+//	                System.out.println("Delete Investor successfully!");
+//	                
+//	            }
+//	            else {
+//	                // Throw an exception or handle the case where the password doesn't match
+//	                throw new IllegalArgumentException("Invalid password");
+//	            }
+//	        }
+//		 else {
+//	            // Throw an exception or handle the case where the investor is not found
+//	            throw new IllegalArgumentException("Investor not found");
+//		 }
+//	}
+	
+	 @Transactional
+	    public boolean deleteStartUpByDetails(String startupname, String username, String password) {
+	        Optional<InvestorInfo> investorInfoOpt = investorInfoRepository.findByUsername(username);
+	        
+	        if (investorInfoOpt.isPresent()) {
+	            InvestorInfo investorInfo = investorInfoOpt.get();
+	            
+	            if (passwordEncoder.matches(password, investorInfo.getPassword())) {
+	                Optional<AddStartUp> startUpOpt = addStartUpRepository.findByStartupnameAndInvestorInfo(startupname, investorInfo);
+	                
+	                if (startUpOpt.isPresent()) {
+	                    addStartUpRepository.delete(startUpOpt.get());
+	                    return true;
+	                }
+	            }
+	            else {
+	                // Throw an exception or handle the case where the password doesn't match
+	                throw new IllegalArgumentException("Invalid password");
+	            }
+	        }
+		 else {
+	            // Throw an exception or handle the case where the investor is not found
+	            throw new IllegalArgumentException("startup not found");
+	    	 }
+	        return false;
+	    }
+	
+	
+	
+	
+	
+	                                        //--------------  Investors APIs ---------//
 	
 	
 	
@@ -364,7 +427,7 @@ public class StartUpService {
 	        else {
 	            System.out.println("InvestorInfo not found for the given username.");
 	        }
-	        return investorInfoOptional.get();
+	        return investorInfoOptional.get();  //for getting mail from investorInfo object.
 	   }
 	  
 	  

@@ -1,6 +1,7 @@
 package com.Investify.controller;
 
 import java.util.Base64;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,12 +28,14 @@ import com.Investify.repository.AddStartUpRepository;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
-
 import jakarta.transaction.Transactional;
 
+
+//@WebMvcTest(StartUpController.class)
 @RestController
 @CrossOrigin("*")
 public class StartUpController {
+	
 	
 	@Autowired
 	StartUpService startUpService;
@@ -46,9 +49,9 @@ public class StartUpController {
 	@Autowired  
 	AddStartUpRepository  addStartUpRepository;
 	
-	
 
 	private final BCryptPasswordEncoder passwordEncoder;
+	
 	@Autowired
     public StartUpController(BCryptPasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
@@ -110,10 +113,31 @@ public class StartUpController {
 	}	
 	
 	@GetMapping("/getByIndustry")
-	public List<StartUpInfo> getByIndustryName(@RequestParam("ind") String industry){
+	public List<StartUpInfo> getByIndustryName(@RequestParam("startupname") String username, String password){
 		return startUpService.getByIndustryName(industry);
 	}
 	
+//	@DeleteMapping("/delete-startup")
+//	public ResponseEntity<?> deleteStartup(@RequestParam("username") String username, @RequestParam("password") String password){
+//		startUpService.deleteByUsername(username,password);
+//		return ResponseEntity.ok().build();
+//	}
+	
+	@DeleteMapping("/delete-startup")
+    public ResponseEntity<String> deleteStartUp(
+            @RequestParam("startupname") String startupname,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password) {
+		
+        boolean isDeleted = startUpService.deleteStartUpByDetails(startupname, username, password);
+        
+        if (isDeleted) {
+            return ResponseEntity.ok("StartUp deleted successfully.");
+        } 
+        else {
+            return ResponseEntity.status(403).body("Invalid credentials or StartUp not found.");
+        }
+    }
 	
 	//--------------  Investors APIs ---------//  
 	
@@ -191,7 +215,7 @@ public class StartUpController {
 
 	@PutMapping("/add-startup")
     public ResponseEntity<?> updateStartupName(
-    		@RequestParam("startupName") String startupname,
+    		@RequestParam("startupname") String startupname,
     		@RequestParam("investmentAmount") String investmentAmount,
     		@RequestParam("username") String username, 
     		@RequestParam("password")String password ){
@@ -209,6 +233,8 @@ public class StartUpController {
         }
         return ResponseEntity.ok().build();
     }
+	
+	
 	
 	
 	@GetMapping("/get-allStartup")
