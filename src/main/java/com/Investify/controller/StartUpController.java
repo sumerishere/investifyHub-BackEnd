@@ -113,7 +113,7 @@ public class StartUpController {
 	}	
 	
 	@GetMapping("/getByIndustry")
-	public List<StartUpInfo> getByIndustryName(@RequestParam("startupname") String username, String password){
+	public List<StartUpInfo> getByIndustryName(@RequestParam("ind") String industry){
 		return startUpService.getByIndustryName(industry);
 	}
 	

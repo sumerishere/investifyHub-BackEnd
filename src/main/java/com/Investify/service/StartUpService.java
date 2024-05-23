@@ -210,38 +210,7 @@ public class StartUpService {
 		
 	}
 	
-	
-	
-	//delete startup api
-	
-//	public boolean deleteStartUpByDetails(String startupname, String username, String password) {
-//		
-//		 Optional<InvestorInfo> investorDetails = investorInfoRepository.findByUsername(username);
-//         
-//		 if (investorDetails.isPresent()) {
-//			 
-//	            InvestorInfo investor = investorDetails.get();
-//	            
-//	            if (passwordEncoder.matches(password, investor.getPassword())) {
-//	            	
-//	            	Optional<AddStartUp> startupDetails = addStartUpRepository.existsByStartupnameAndInvestorInfo(String startupname, InvestorInfo investorInfo);
-//	            	AddStartUp startup = AddStartUp.get();
-//	            	
-//	            		addStartUpRepository.delete();
-//	                
-//	                System.out.println("Delete Investor successfully!");
-//	                
-//	            }
-//	            else {
-//	                // Throw an exception or handle the case where the password doesn't match
-//	                throw new IllegalArgumentException("Invalid password");
-//	            }
-//	        }
-//		 else {
-//	            // Throw an exception or handle the case where the investor is not found
-//	            throw new IllegalArgumentException("Investor not found");
-//		 }
-//	}
+	//-------------delete APi of invested startup -----------//
 	
 	 @Transactional
 	    public boolean deleteStartUpByDetails(String startupname, String username, String password) {
@@ -260,17 +229,17 @@ public class StartUpService {
 	            }
 	            else {
 	                // Throw an exception or handle the case where the password doesn't match
-	                throw new IllegalArgumentException("Invalid password");
+//	                throw new IllegalArgumentException("Invalid password");
+	            	System.out.println("Invalid password");
 	            }
 	        }
 		 else {
 	            // Throw an exception or handle the case where the investor is not found
-	            throw new IllegalArgumentException("startup not found");
+//	            throw new IllegalArgumentException("startup not found");
+			    System.out.println("StartUp not found.");
 	    	 }
 	        return false;
 	    }
-	
-	
 	
 	
 	
