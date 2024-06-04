@@ -70,7 +70,7 @@ public class StartUpService {
         
         simpleMailMessage.setSubject(subject);
         
-        String body="Hi "+name +", \n\nCongratulations!!! on your investment in "+startupname+"\nInvested Amount : "+investmentAmount+
+        String body="Hi "+name +", \n\nCongratulations!!! on your investment in "+startupname+"\nYour Invested Amount : "+investmentAmount+" INR"+
         		". \n\nThanks For Choosing Us, Keep Expand Your Portfolio and Diversify Your Investments!!! " 
         		+"\n\nBest regards,\nTeam InvestifyHub.in \n\n\n*** Please note that this is an automatically generated email that cannot receive replies ***";
         
@@ -127,12 +127,13 @@ public class StartUpService {
            	String ceoLink,
            	String ctoLink,
            	String boardLink,
-           	String industry,
+//           	String industry,
            	MultipartFile companyImage
            	) {
 
         // Create a Startup object
         StartUpInfo startup = new StartUpInfo();
+        
         startup.setCompanyName(companyName);
         startup.setTitle(title);
         startup.setDesc(desc);
@@ -159,7 +160,9 @@ public class StartUpService {
         startup.setCeoLink(ceoLink);
         startup.setCtoLink(ctoLink);
         startup.setBoardLink(boardLink);
-        startup.setIndustry(industry);
+//        startup.setIndustry(industry);
+        
+        
         
         // Set non-LOB data using setters
         try {
@@ -201,14 +204,14 @@ public class StartUpService {
 	public List<StartUpInfo> getByName(String name){
 		
 		return startUpRepository.findByCompanyName(name);
-		
 	}
 	
 	
-	public List<StartUpInfo> getByIndustryName(String industry){
-		return startUpRepository.findAllByindustry(industry);
-		
-	}
+//	public List<StartUpInfo> getByIndustryName(String industry){
+//		return startUpRepository.findAllByindustry(industry);
+//		
+//	}
+
 	
 	//-------------delete APi of invested startup -----------//
 	
@@ -229,13 +232,13 @@ public class StartUpService {
 	            }
 	            else {
 	                // Throw an exception or handle the case where the password doesn't match
-//	                throw new IllegalArgumentException("Invalid password");
+               	    // throw new IllegalArgumentException("Invalid password");
 	            	System.out.println("Invalid password");
 	            }
 	        }
 		 else {
 	            // Throw an exception or handle the case where the investor is not found
-//	            throw new IllegalArgumentException("startup not found");
+                // throw new IllegalArgumentException("startup not found");
 			    System.out.println("StartUp not found.");
 	    	 }
 	        return false;
@@ -243,9 +246,10 @@ public class StartUpService {
 	
 	
 	
-	                                        //--------------  Investors APIs ---------//
+	                             //-----------------------  Investors APIs ---------------------//
 	
 	
+	 
 	
 	    //----------GET API of Investor --------//
 	
@@ -257,62 +261,56 @@ public class StartUpService {
          //---------POST API of Investor----------//
 	
 	
-	public String saveInvestor(InvestorInfo info, MultipartFile image) {
+//	public String saveInvestor(InvestorInfo info, MultipartFile image) {
 		
-	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(info.getUsername());
-	    Optional<InvestorInfo> investorMailId = investorInfoRepository.findByMailId(info.getMailId());
-
-	    if (investorMailId.isPresent()) {
-	        return "Already Exist Mail-Id";
-	    }
-
-	    if (investorUsername.isPresent()) {
-	        return "Already Exist Username.";
-	    }
-
-	    try {
-	        InvestorInfo newInfo = new InvestorInfo();
-	        newInfo.setName(info.getName());
-	        newInfo.setMobileNo(info.getMobileNo());
-	        newInfo.setMailId(info.getMailId());
-	        newInfo.setUsername(info.getUsername());
-	        newInfo.setPassword(info.getPassword());
-
-	        // Convert image to byte array
-	        byte[] imageBytes = image.getBytes();
-	        newInfo.setImage(imageBytes); 
-
-	        // Encode the investor password before saving
-	        String encodedPassword = passwordEncoder.encode(newInfo.getPassword());
-	        newInfo.setPassword(encodedPassword);
-
-	        investorInfoRepository.save(newInfo);
-	        return "save successfully";
-	    } 
-	    catch (IOException e) {
-	        e.printStackTrace();
-	        return "internal server error.";
-	    }
-	}
-	
-	
-	//-------------------- without multipartfile -------------------------//
-	
-//		InvestorInfo info = new InvestorInfo();
-//		info.setName(name);
-//		info.setMobileNo(mobileNo);
-//		info.setMailId(mailId);
-//		info.setUsername(username);
-//		info.setPassword(password);
 //		
-//		info.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+//	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(info.getUsername());
+//	    Optional<InvestorInfo> investorMailId = investorInfoRepository.findByMailId(info.getMailId());
+//
+//	    if (investorMailId.isPresent()) {
+//	        return "Already Exist Mail-Id";
+//	    }
+//
+//	    if (investorUsername.isPresent()) {
+//	        return "Already Exist Username.";
+//	    }
+//
+//	    try {
+//	        InvestorInfo newInfo = new InvestorInfo();
+//	        newInfo.setName(info.getName());
+//	        newInfo.setMobileNo(info.getMobileNo());
+//	        newInfo.setMailId(info.getMailId());
+//	        newInfo.setUsername(info.getUsername());
+//	        newInfo.setPassword(info.getPassword());
+//
+//	        // Convert image to byte array
+//	        byte[] imageBytes = image.getBytes();
+//	        newInfo.setImage(imageBytes); 
+//
+//	        // Encode the investor password before saving
+//	        String encodedPassword = passwordEncoder.encode(newInfo.getPassword());
+//	        newInfo.setPassword(encodedPassword);
+//
+//	        investorInfoRepository.save(newInfo);
+//	        return "save successfully";
+//	    } 
+//	    catch (IOException e) {
+//	        e.printStackTrace();
+//	        return "internal server error.";
+//	    }
+//	}
 //	
-//		// Encode the investor password before saving
-//        String encodedPassword = passwordEncoder.encode(info.getPassword());
-//        info.setPassword(encodedPassword);
-//		
-//		investorInfoRepository.save(info);
-//		return "save succesfully";
+	
+//-------------------- without image -------------------------//
+	
+	public InvestorInfo saveInvestor(InvestorInfo info) {
+		
+		// Encode the investor password before saving
+        String encodedPassword = passwordEncoder.encode(info.getPassword());
+        info.setPassword(encodedPassword);
+		
+        return investorInfoRepository.save(info);
+  }
 	
 //---------------------------------------------//
 	
@@ -349,7 +347,6 @@ public class StartUpService {
 	
 	//-------------PUT API of Investor ---------------//
 	
-	  @Transactional
 	  public InvestorInfo addStartupName(String startupName, String investmentAmount, String username, String password) {
 
 	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
@@ -367,15 +364,36 @@ public class StartUpService {
 	                    List<StartUpInfo> startupInfoList = startUpRepository.findByCompanyName(startupName);
 	                    
 	                    if (!startupInfoList.isEmpty()) {
+	                    	
 	                        AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount, investorInfo);
-
+	                        
 	                        addStartUp.setInvestorInfo(investorInfo);
-
+	                        
+	                        String amount = addStartUp.getInvestmentAmount();
+	                        
+	                        boolean flag = true; //non-digit checker flag
+	                        
+	                        for(int i = 0; i<amount.length(); i++) {
+	                        	
+	                        	char ch = amount.charAt(i);
+	                        	
+	                        	if(!Character.isDigit(ch)) {
+	                        		flag = false;
+		                        	break;
+		                        }
+	                        }
+	                      
 	                        try {
 	                        	
-	                            addStartUpRepository.save(addStartUp);
+	                        	if(flag) {
+	                        		addStartUpRepository.save(addStartUp);
+		                            System.out.println("Startup added successfully.");
+	 	                        	System.out.println("input is fine");
+	 	                        } 
+	 	                        else {
+	 	                        	System.out.println("letter or symbol is present");
+	 	                        }
 	                            
-	                            System.out.println("Startup added successfully.");
 	                        } 
 	                        catch (Exception e) {
 	                            System.out.println("Failed to save AddStartUp: " + e.getMessage());
@@ -434,8 +452,10 @@ public class StartUpService {
 	        return null; 
 	    }
 
+	  
+	  
 	 
-	             //---------------Authentication------------------//
+	             //---------------Authentication API------------------//
 	
 	public Optional<InvestorInfo> getCredentials(String username, String password){
 	    Optional<InvestorInfo> investorUsername = investorInfoRepository.findByUsername(username);

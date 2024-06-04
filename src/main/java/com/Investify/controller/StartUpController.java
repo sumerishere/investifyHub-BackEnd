@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -91,11 +92,11 @@ public class StartUpController {
             @RequestParam("ceolink") String ceoLink,
             @RequestParam("ctoLink") String ctoLink,
             @RequestParam("boardLink") String boardLink,
-            @RequestParam("industry") String industry,
+//            @RequestParam("industry") String industry,
             @RequestParam("cmImage") MultipartFile companyImage) {
 
         // Create a Startup object
-       return startUpService.saveData(companyName, title, desc, pitch, wti, ceoName, ctoName, boardMemberName, ceoInfo, ctoInfo, boardInfo, ppr, valuation, fundingGoal, deadline, minInvest, maxInvest, nofS, oft, ast, shareOf, raised, investor, pitchImage, wtiImage, ceoImage, ctoImage, boardImage,ceoLink,ctoLink,boardLink,industry,companyImage);
+       return startUpService.saveData(companyName, title, desc, pitch, wti, ceoName, ctoName, boardMemberName, ceoInfo, ctoInfo, boardInfo, ppr, valuation, fundingGoal, deadline, minInvest, maxInvest, nofS, oft, ast, shareOf, raised, investor, pitchImage, wtiImage, ceoImage, ctoImage, boardImage,ceoLink,ctoLink,boardLink,companyImage);
     }
 	
 	
@@ -112,10 +113,15 @@ public class StartUpController {
 		return startUpService.getByName(sname);
 	}	
 	
-	@GetMapping("/getByIndustry")
-	public List<StartUpInfo> getByIndustryName(@RequestParam("ind") String industry){
-		return startUpService.getByIndustryName(industry);
-	}
+	
+	//industry category api
+	
+//	@GetMapping("/getByIndustry")
+//	public List<StartUpInfo> getByIndustryName(@RequestParam("ind") String industry){
+//		return startUpService.getByIndustryName(industry);
+//	}
+	
+	
 	
 //	@DeleteMapping("/delete-startup")
 //	public ResponseEntity<?> deleteStartup(@RequestParam("username") String username, @RequestParam("password") String password){
@@ -143,21 +149,31 @@ public class StartUpController {
 	
 	
 //	@PostMapping("/saveInvestorInfo")
-//	public String saveInvestor(@RequestBody InvestorInfo info, @RequestPart("image") MultipartFile image) {
-//		return startUpService.saveInvestor(info,image);
+//	public InvestorInfo saveInvestor(@RequestBody InvestorInfo info) {
+//		return startUpService.saveInvestor(info);
 //	}
+	
 	
 	@PostMapping("/saveInvestorInfo")
-    public String saveInvestor(@RequestPart("info") InvestorInfo info,
-                               @RequestPart("image") MultipartFile image) {
-        return startUpService.saveInvestor(info, image);
-    }
+	public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {
+		
+	    try {
+	        startUpService.saveInvestor(info);
+	        return ResponseEntity.ok("Investor information saved successfully.");
+	    } 
+	    catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error!!!");
+	    }
+	}
+	
 	
 //	@PostMapping("/saveInvestorInfo")
-//	public String saveInvestor(@ModelAttribute InvestorInfo info,
-//	                           @RequestParam("image") MultipartFile image) {
-//	    return startUpService.saveInvestor(info, image);
-//	}
+//    public String saveInvestor(@RequestPart("info") InvestorInfo info,
+//                               @RequestPart("image") MultipartFile image) {
+//        return startUpService.saveInvestor(info, image);
+//    }
+	
+	
 	
 	@GetMapping("/get-all-investors")
 	public List<InvestorInfo> getInvestorsData(){
@@ -219,7 +235,6 @@ public class StartUpController {
     		@RequestParam("investmentAmount") String investmentAmount,
     		@RequestParam("username") String username, 
     		@RequestParam("password")String password ){
-		
         
         InvestorInfo info = startUpService.addStartupName(startupname, investmentAmount, username, password); 
         System.out.println(info);
@@ -228,12 +243,11 @@ public class StartUpController {
         	
         	startUpService.SendMail(info.getName(),info.getMailId(),startupname, investmentAmount);
         }
-        	catch(Exception e){
-        	
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok().build();
     }
-	
 	
 	
 	

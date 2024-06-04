@@ -73,7 +73,7 @@ public class StartUpInfo {
 	private String boardLink;
 	
 	//industry
-	private String industry;
+//	private String industry;
 	
 	
 	
@@ -85,13 +85,13 @@ public class StartUpInfo {
 		this.companyImage = companyImage;
 	}
 	
-	public String getIndustry() {
-		return industry;
-	}
-	
-	public void setIndustry(String industry) {
-		this.industry = industry;
-	}
+//	public String getIndustry() {
+//		return industry;
+//	}
+//	
+//	public void setIndustry(String industry) {
+//		this.industry = industry;
+//	}
 	
 	public String getCeoLink() {
 		return ceoLink;
@@ -292,7 +292,7 @@ public class StartUpInfo {
 			String ctoNAme, String boardMemberNAme, String ceoinfo, String ctoinfo, String boradinfo, String ppr,
 			String valuation, String fundinggoal, String deadline, String mininvest, String maxInvest, String nofS,
 			String oft, String ast, String shareof, String raised, String investor, String pitchimage, String wtiImage,
-			String ceoImage, String ctoimage, String board,String ceoLink,String ctoLink,String boardLink,String industry,String companyImage) {
+			String ceoImage, String ctoimage, String board,String ceoLink,String ctoLink,String boardLink,String companyImage) {
 		this.id = id;
 		this.companyName = companyName;
 		this.title = title;
@@ -325,14 +325,10 @@ public class StartUpInfo {
 		this.ceoLink=ceoLink;
 		this.ctoLink=ctoLink;
 		this.boardLink=boardLink;
-		this.industry=industry;
+//		this.industry=industry;
 		this.companyImage=companyImage;
 	}
 	
-	
-	public StartUpInfo() {
-		
-	}
-	
+	public StartUpInfo() {}
 	
 }
