@@ -109,9 +109,14 @@ public class StartUpController {
 	
 	@GetMapping("/getbyName")
 	public List<StartUpInfo> getByName(@RequestParam("cname") String sname){
-		
 		return startUpService.getByName(sname);
 	}	
+	
+	
+//	@GetMapping("/company-name")
+//	public void getCompanyName(String companyName) {
+//		 startUpService.getCompanyNamee(companyName);
+//	}
 	
 	
 	//industry category api
@@ -275,7 +280,7 @@ public class StartUpController {
 	
 	//-------- Login - Status-----//
 	
-	 @PostMapping("/invested-startups")
+	 @GetMapping("/invested-startups")
 	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
 		 
 //		 System.out.println(request.getUsername()+" "+request.getPassword());

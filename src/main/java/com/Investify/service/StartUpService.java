@@ -59,7 +59,7 @@ public class StartUpService {
 //	}
 	
 	
-	// ----------- Mail Sender API ---------//
+	// ----------- Acknowledgement Mail Sender API ---------//
 	
 	public void SendMail(String name,String to,String startupname,String investmentAmount) throws MessagingException,IOException{
 		
@@ -127,9 +127,9 @@ public class StartUpService {
            	String ceoLink,
            	String ctoLink,
            	String boardLink,
-//           	String industry,
+           //String industry,
            	MultipartFile companyImage
-           	) {
+           	){
 
         // Create a Startup object
         StartUpInfo startup = new StartUpInfo();
@@ -160,7 +160,7 @@ public class StartUpService {
         startup.setCeoLink(ceoLink);
         startup.setCtoLink(ctoLink);
         startup.setBoardLink(boardLink);
-//        startup.setIndustry(industry);
+        // startup.setIndustry(industry);
         
         
         
@@ -195,6 +195,10 @@ public class StartUpService {
     }
 	
 	
+//	public void getCompanyNamee(String CompanyName) {
+//		startUpRepository.getByCompanyName(CompanyName);
+//	}
+	
 	public List<StartUpInfo> getAll(){
 		return startUpRepository.findAll();
 		
@@ -205,6 +209,7 @@ public class StartUpService {
 		
 		return startUpRepository.findByCompanyName(name);
 	}
+	
 	
 	
 //	public List<StartUpInfo> getByIndustryName(String industry){
@@ -347,75 +352,108 @@ public class StartUpService {
 	
 	//-------------PUT API of Investor ---------------//
 	
-	  public InvestorInfo addStartupName(String startupName, String investmentAmount, String username, String password) {
+	public InvestorInfo addStartupName(String startupName, String investmentAmount, String username, String password) {
 
-	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+		Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
 
-	        if (investorInfoOptional.isPresent()) {
-	            InvestorInfo investorInfo = investorInfoOptional.get();
+		if (investorInfoOptional.isPresent()) {
+			InvestorInfo investorInfo = investorInfoOptional.get();
 
-	            // Check if provided password matches the hashed password stored in the database
-	            if (passwordEncoder.matches(password, investorInfo.getPassword())) {
-  	
-	                // Check if the startup name already exists for the investor
-	                if (!addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo)) {
+			// Check if provided password matches the hashed password stored in the database
+			if (passwordEncoder.matches(password, investorInfo.getPassword())) {
 
-	                    // Check if the startup name exists in StartUpInfo table
-	                    List<StartUpInfo> startupInfoList = startUpRepository.findByCompanyName(startupName);
-	                    
-	                    if (!startupInfoList.isEmpty()) {
-	                    	
-	                        AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount, investorInfo);
-	                        
-	                        addStartUp.setInvestorInfo(investorInfo);
-	                        
-	                        String amount = addStartUp.getInvestmentAmount();
-	                        
-	                        boolean flag = true; //non-digit checker flag
-	                        
-	                        for(int i = 0; i<amount.length(); i++) {
-	                        	
-	                        	char ch = amount.charAt(i);
-	                        	
-	                        	if(!Character.isDigit(ch)) {
-	                        		flag = false;
-		                        	break;
-		                        }
-	                        }
-	                      
-	                        try {
-	                        	
-	                        	if(flag) {
-	                        		addStartUpRepository.save(addStartUp);
-		                            System.out.println("Startup added successfully.");
-	 	                        	System.out.println("input is fine");
-	 	                        } 
-	 	                        else {
-	 	                        	System.out.println("letter or symbol is present");
-	 	                        }
-	                            
-	                        } 
-	                        catch (Exception e) {
-	                            System.out.println("Failed to save AddStartUp: " + e.getMessage());
-	                        }
-	                    }
-	                    else {
-	                        System.out.println("Invalid startup name.");
-                    }
-	                } 
-	                else {
-	                    System.out.println("Startup name already exists in the list.");   
-	                }
-	            }
-	            else {
-	                System.out.println("Incorrect password.");
-	            }
-	        }
-	        else {
-	            System.out.println("InvestorInfo not found for the given username.");
-	        }
-	        return investorInfoOptional.get();  //for getting mail from investorInfo object.
-	   }
+				// Check if the startup name exists in StartUpInfo table
+				List<StartUpInfo> startupInfoList = startUpRepository.findByCompanyName(startupName);
+
+				if (!startupInfoList.isEmpty()) {
+
+					AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount, investorInfo);
+
+					addStartUp.setInvestorInfo(investorInfo);
+
+					String amount = addStartUp.getInvestmentAmount();
+
+					boolean flag = true; // non-digit checker flag
+
+					for (int i = 0; i < amount.length(); i++) {
+
+						char ch = amount.charAt(i);
+
+						if (!Character.isDigit(ch)) {
+							flag = false;
+							break;
+						}
+					}
+
+					try {
+
+						if (!addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo)) {
+
+							if (flag) {
+
+								addStartUpRepository.save(addStartUp);
+								System.out.println("Startup added successfully.");
+								System.out.println("input is fine");
+							} else {
+								System.out.println("letter or symbol is present");
+							}
+						} 
+						else {
+
+							if (flag) {
+
+								Optional<AddStartUp> addStartUpAmountOptional = addStartUpRepository
+										.findByStartupnameAndInvestorInfo(startupName, investorInfo);
+
+								if (addStartUpAmountOptional.isPresent()) {
+
+									AddStartUp addStartUpAmount = addStartUpAmountOptional.get();
+
+									// Parse the existing investment amount and the new investment amount
+									double existingAmount = Double.parseDouble(addStartUpAmount.getInvestmentAmount().replace(",", ""));
+									
+									// Parse the new investment amount and replace "," .
+									double newAmount = Double.parseDouble(investmentAmount.replace(",", ""));
+
+									// Add the new amount to the existing amount
+									double updatedAmount = existingAmount + newAmount;
+
+									// Set the updated amount as the new investment amount
+									addStartUpAmount.setInvestmentAmount(Double.toString(updatedAmount));
+
+									// Save the updated entity
+									addStartUpRepository.save(addStartUpAmount);
+									
+									System.out.println("Amount added Successfully !!!");	
+								}
+								else {
+									
+									System.out.println("amount adding failed!!!!");
+								}
+
+							} 
+							else {
+								System.out.println("letter or symbol is present");
+							}
+						}
+					}
+					catch (Exception e) {
+						System.out.println("Failed to save AddStartUp: " + e.getMessage());
+					}
+				} 
+				else {
+					System.out.println("Invalid startup name.");
+				}
+			}
+			else {
+				System.out.println("Incorrect password.");
+			}
+		} 
+		else {
+			System.out.println("InvestorInfo not found for the given username.");
+		}
+		return investorInfoOptional.get(); // for getting mail from investorInfo object.
+	}
 	  
 	  
 	  

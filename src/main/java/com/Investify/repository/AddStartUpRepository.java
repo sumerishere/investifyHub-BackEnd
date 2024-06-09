@@ -18,5 +18,7 @@ public interface AddStartUpRepository extends JpaRepository<AddStartUp,Long> {
 	
 	List<AddStartUp> findByInvestorInfo(InvestorInfo investorInfo);
 	
+	
 	Optional<AddStartUp> findByStartupnameAndInvestorInfo(String startupname, InvestorInfo investorInfo);
+	
 }

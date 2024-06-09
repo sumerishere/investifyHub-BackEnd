@@ -13,6 +13,8 @@ public interface StartUpRepository extends JpaRepository<StartUpInfo, Long> {
 	
 	public List<StartUpInfo> findByCompanyName(String name);
 	
+//	public void getByCompanyName(String companyName);
+	
 //	public List<StartUpInfo> findAllByindustry(String industry);
 	
 }
