@@ -39,7 +39,7 @@ public class InvestorInfo {
 		
 	
 	@OneToMany(mappedBy = "investorInfo", cascade = CascadeType.ALL)
-    private List<AddStartUp> startUps = new ArrayList<>();
+    private List<AddStartUp> startUps = new ArrayList<>(); 
 	
 
 	public InvestorInfo() {}   

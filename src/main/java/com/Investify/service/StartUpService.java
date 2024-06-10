@@ -85,6 +85,42 @@ public class StartUpService {
 
     }
 	
+	//--------------Sign-up mail sender ---------//
+	
+	public void signUpMail(String name, String to, String username) throws MessagingException,IOException {
+		
+		 SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+		 simpleMailMessage.setTo(to);
+		 
+		 String subject = "Successfully!!! Sign-Up";
+		 
+		 simpleMailMessage.setSubject(subject);
+		 
+		 String body = "Hi "+name +","
+		 		+"\n\nThank!!! you for signing up on InvestifyHub.in "
+				+"\nYour Username : "+username+"."
+		 		+"\n\nAs an investor on our platform, you gain access to a diverse "
+		 		+"portfolio of high-growth opportunities curated by industry experts."
+		 		+"\n\nOur advanced analytics and personalized investment strategies ensure your money is working efficiently towards your financial goals. "
+		 		+"\n\nJoin us and take the next step in securing a "
+		 		+"prosperous financial future with InvestifyHub.in"
+		 		+"\nHappy :)"+"  "+"investing!!! "
+		 		+"\n\nBest regards,\nTeam InvestifyHub.in "
+		 		+"\n\n\n*** Please note that this is an automatically generated email that cannot receive replies ***";
+		 
+		 MimeMessage mime = sender.createMimeMessage();
+		 MimeMessageHelper mimeHelper = new MimeMessageHelper(mime);
+		 mimeHelper.setTo(to);
+		 mimeHelper.setSubject(subject);
+		 mimeHelper.setText(body);
+		 
+		 sender.send(mime);
+		 
+	}
+	
+	
+	
+	
 	
 	private final BCryptPasswordEncoder passwordEncoder;
 

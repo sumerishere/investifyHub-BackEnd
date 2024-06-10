@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +30,8 @@ import com.Investify.repository.AddStartUpRepository;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
+
+import ch.qos.logback.core.status.Status;
 import jakarta.transaction.Transactional;
 
 
@@ -164,6 +167,8 @@ public class StartUpController {
 		
 	    try {
 	        startUpService.saveInvestor(info);
+	        startUpService.signUpMail(info.getName(), info.getMailId(), info.getUsername());
+	        
 	        return ResponseEntity.ok("Investor information saved successfully.");
 	    } 
 	    catch (Exception e) {
@@ -280,7 +285,7 @@ public class StartUpController {
 	
 	//-------- Login - Status-----//
 	
-	 @GetMapping("/invested-startups")
+	 @PostMapping("/invested-startups")
 	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
 		 
 //		 System.out.println(request.getUsername()+" "+request.getPassword());
