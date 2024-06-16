@@ -30,14 +30,18 @@ import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRegistraionRepository;
 import com.Investify.repository.StartUpRepository;
 import com.exceptionHandling.InvalidInvestmentAmountException;
+import com.validationCheck.RegexPatterns;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @Service
-public class StartUpService {
+public class StartUpService implements RegexPatterns{
 
 	@Autowired
 	StartUpRepository startUpRepository;
@@ -124,6 +128,36 @@ public class StartUpService {
 		 
 	}
 	
+	
+	//----- startup- registration mail -----//
+	
+	public void startUpMail(String founderName, String to, String companyName) throws MessagingException,IOException {
+		
+		 SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+		 simpleMailMessage.setTo(to);
+		 
+		 String subject = "Registration on investifyHub Successfully!!!";
+		 
+		 simpleMailMessage.setSubject(subject);
+		 
+		 String body = "Dear "+founderName+","
+				 +"\n\nThank!!! you for Registration of "+companyName+" on InvestifyHub.in "
+				 +"\n\nWe are delighted to welcome "+companyName +" to InvestifyHub! Your registration marks "
+				 + "the beginning of an exciting journey, and we look forward to supporting your growth and success. "
+				 + "\n\nShould you need any assistance, please feel free to reach out."
+				 +"\n\n\nBest regards,"
+				 + "\nTeam InvestifyHub.in "
+			 	 +"\n\n\n*** Please note that this is an automatically generated email that cannot receive replies ***";
+		 
+		 MimeMessage mime = sender.createMimeMessage();
+		 MimeMessageHelper mimeHelper = new MimeMessageHelper(mime);
+		 mimeHelper.setTo(to);
+		 mimeHelper.setSubject(subject);
+		 mimeHelper.setText(body);
+		 
+		 sender.send(mime);
+		
+	}
 	
 	
 	
@@ -297,7 +331,7 @@ public class StartUpService {
 	 //--------------- Start-Up Registarion API ---------------------//
 	 
 	 // startUp registration API 
-	 public StartUpRegistraion saveStartUpRegister(String founderName,String mobileNo, String email, String linkedlnUrl,String companyUrl,MultipartFile companyPdf) {
+	 public StartUpRegistraion saveStartUpRegister(String founderName,String mobileNo, String email, String linkedlnUrl, String companyName,String companyUrl,MultipartFile companyPdf) {
 		 
 		 StartUpRegistraion startUpInfo = new StartUpRegistraion();
 		 
@@ -305,6 +339,8 @@ public class StartUpService {
 		 startUpInfo.setMobileNo(mobileNo);
 		 startUpInfo.setEmail(email);
 		 startUpInfo.setLinkedInUrl(linkedlnUrl);
+		 startUpInfo.setCompanyName(companyName);
+		 startUpInfo.setCompanyName(companyUrl);
 		 startUpInfo.setCompanyUrl(companyUrl);
 		 
 		 try {
@@ -405,10 +441,12 @@ public class StartUpService {
 	    }
 		
         // Validate the email format with lowercase letters only
-        String email = info.getMailId();
-        String emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
         
-        if (!email.matches(emailPattern)) {
+	    //String emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
+	    String email = info.getMailId();
+	    
+	    
+        if (!email.matches(EMAIL_PATTERN)) {
         	System.out.println("Invalid email format. Email must contain only lowercase letters and proper format..");
             throw new IllegalArgumentException("Invalid email format. Email must contain only lowercase letters and proper format.");
         }
@@ -431,9 +469,9 @@ public class StartUpService {
         
         // Validate the password
         String password = info.getPassword();
-        String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        //String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         
-        if (!password.matches(passwordPattern)) {
+        if (!password.matches(PASSWORD_PATTERN)) {
         	System.out.println("Password must be at least 8 characters ...");
             throw new IllegalArgumentException("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         }

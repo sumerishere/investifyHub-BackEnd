@@ -16,6 +16,7 @@ public class StartUpRegistraion {
 	private String mobileNo;
 	private String email;
 	private String linkedInUrl;
+	private String companyName;
 	private String companyUrl;
 	
 	@Column(columnDefinition = "LongText")
@@ -25,7 +26,7 @@ public class StartUpRegistraion {
 	
 	public StartUpRegistraion() {}
 	
-	public StartUpRegistraion(Long id, String founderName, String mobileNo, String email, String linkedInUrl,
+	public StartUpRegistraion(Long id, String founderName, String mobileNo, String email, String linkedInUrl,String companyName,
 			String companyUrl,String companyPdf) {
 		
 		this.id = id;
@@ -33,9 +34,12 @@ public class StartUpRegistraion {
 		this.mobileNo = mobileNo;
 		this.email = email;
 		this.linkedInUrl = linkedInUrl;
+		this.companyName = companyName;
 		this.companyUrl = companyUrl;
 		this.companyPdf = companyPdf;
 	}
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +70,16 @@ public class StartUpRegistraion {
 	public void setLinkedInUrl(String linkedInUrl) {
 		this.linkedInUrl = linkedInUrl;
 	}
+	
+	
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
 	public String getCompanyUrl() {
 		return companyUrl;
 	}

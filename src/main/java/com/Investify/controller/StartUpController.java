@@ -1,6 +1,8 @@
 package com.Investify.controller;
 
 import org.springframework.http.MediaType;
+
+import java.io.IOException;
 import java.util.Base64;
 
 import java.util.List;
@@ -37,6 +39,7 @@ import com.Investify.service.StartUpService;
 import com.exceptionHandling.InvalidInvestmentAmountException;
 
 import ch.qos.logback.core.status.Status;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 
@@ -165,13 +168,17 @@ public class StartUpController {
 	 
 	 @PostMapping(value = "/StartUp-Registration", consumes = {"multipart/form-data"})
 	 public StartUpRegistraion startUpRegister( @RequestPart("form") StartUpRegistraion request,
-	            @RequestPart("companyPdf") MultipartFile companyPdf ) {
+	            @RequestPart("companyPdf") MultipartFile companyPdf ) throws MessagingException, IOException {
+		 
+		 
+		 startUpService.startUpMail(request.getFounderName(), request.getEmail(),request.getCompanyName());
 		 
 		 return startUpService.saveStartUpRegister(
 				 request.getFounderName(),
 				 request.getMobileNo(), 
 				 request.getEmail(), 
-				 request.getLinkedInUrl(), 
+				 request.getLinkedInUrl(),
+				 request.getCompanyName(),
 				 request.getCompanyUrl(),
 				 companyPdf
 				 );
@@ -225,7 +232,7 @@ public class StartUpController {
 	
 	
 	 @PostMapping("/saveInvestorInfo")
-	    public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {
+	    public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {	
 		 
 	        try {
 	        	startUpService.saveInvestor(info);
