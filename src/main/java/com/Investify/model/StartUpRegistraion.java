@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 
 @Entity
 public class StartUpRegistraion {
@@ -19,15 +20,19 @@ public class StartUpRegistraion {
 	private String companyName;
 	private String companyUrl;
 	
-	@Column(columnDefinition = "LongText")
-	private String companyPdf;
+//	@Column(columnDefinition = "LongText")
+//	private String companyPdf;
+	
+	@Lob
+	@Column(columnDefinition = "LONGBLOB")
+	private byte[] companyPdf;
 	
 	
 	
 	public StartUpRegistraion() {}
 	
 	public StartUpRegistraion(Long id, String founderName, String mobileNo, String email, String linkedInUrl,String companyName,
-			String companyUrl,String companyPdf) {
+			String companyUrl,byte[] companyPdf) {
 		
 		this.id = id;
 		this.founderName = founderName;
@@ -87,11 +92,11 @@ public class StartUpRegistraion {
 		this.companyUrl = companyUrl;
 	}
 
-	public String getCompanyPdf() {
+	public byte[] getCompanyPdf() {
 		return companyPdf;
 	}
 
-	public void setCompanyPdf(String companyPdf) {
+	public void setCompanyPdf(byte[] companyPdf) {
 		this.companyPdf = companyPdf;
 	}
 	

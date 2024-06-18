@@ -196,13 +196,16 @@ public class StartUpController {
 	            return ResponseEntity.notFound().build();
 	        }
 
-	        // Decode Base64 to byte array
+	        // Decode Base64 to byte array for LongText file
 	        byte[] pdfBytes = Base64.getDecoder().decode(startup.getCompanyPdf());
+	        
+	        // for BLOB file access 
+	        //byte[] pdfBytes = startup.getCompanyPdf();
 
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_PDF);
 	        headers.setContentLength(pdfBytes.length);
-//	        headers.setContentDispositionFormData("attachment", "startup-pdf.pdf"); // Optionally, you can force download instead of display
+           //headers.setContentDispositionFormData("attachment", "startup-pdf.pdf"); // Optionally, you can force download instead of display
 
 	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 	    }

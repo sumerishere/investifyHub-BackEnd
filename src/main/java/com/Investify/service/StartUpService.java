@@ -36,8 +36,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
 
 @Service
@@ -336,7 +336,6 @@ public class StartUpService implements RegexPatterns{
 		 StartUpRegistraion startUpInfo = new StartUpRegistraion();
 		 
 		 startUpInfo.setFounderName(founderName);
-		 startUpInfo.setMobileNo(mobileNo);
 		 startUpInfo.setEmail(email);
 		 startUpInfo.setLinkedInUrl(linkedlnUrl);
 		 startUpInfo.setCompanyName(companyName);
@@ -344,15 +343,38 @@ public class StartUpService implements RegexPatterns{
 		 startUpInfo.setCompanyUrl(companyUrl);
 		 
 		 try {
-	          // Convert the PDF file to Base64 and set it to the companyPdf field
-	          String companyPdfBase64 = Base64.getEncoder().encodeToString(companyPdf.getBytes());
-	          startUpInfo.setCompanyPdf(companyPdfBase64);
-	          
-	        } catch (IOException e) {
-	        	
-	        	e.printStackTrace();
-	        	throw new RuntimeException("Failed to process PDF file", e);
-	      }
+			  //Mobile number validation
+		      if (mobileNo.matches(MOBILE_NUMBER_PATTERN)) {
+		    	  startUpInfo.setMobileNo(mobileNo);
+		      }
+		      else {
+		    	  throw new IllegalArgumentException("Invalid mobile number format");
+		      	}
+		      
+			  //handle for BLOB or large pdf file
+		      startUpInfo.setCompanyPdf(companyPdf.getBytes());
+		  } 
+		 catch(IOException e) {
+			 
+			 e.printStackTrace();
+		     throw new RuntimeException("Failed to process PDF file", e);
+	 	 }
+		 catch (IllegalArgumentException e) {
+			 
+			 e.printStackTrace();
+			 throw new RuntimeException("Validation error: " + e.getMessage(), e);
+	    }
+		 
+//		 try {
+//	          // Convert the PDF file to Base64 and set it to the companyPdf field
+//	          String companyPdfBase64 = Base64.getEncoder().encodeToString(companyPdf.getBytes());
+//	          startUpInfo.setCompanyPdf(companyPdfBase64);
+//	          
+//	        } catch (IOException e) {
+//	        	
+//	        	e.printStackTrace();
+//	        	throw new RuntimeException("Failed to process PDF file", e);
+//	      }
 		 
 		 return startUpRegistraionRepository.save(startUpInfo);
 	 }	
@@ -435,7 +457,7 @@ public class StartUpService implements RegexPatterns{
 		String mobilNoChecker = info.getMobileNo();
 	        
 	    // Check if the mobile number contains only digits
-	    if (!mobilNoChecker.matches("\\d+")) {
+	    if (!mobilNoChecker.matches(MOBILE_NUMBER_PATTERN)) {
 	    	System.out.println("Mobile number contains invalid characters. Only digits are allowed.");
 	    	throw new IllegalArgumentException("Mobile number contains invalid characters. Only digits are allowed.");
 	    }
