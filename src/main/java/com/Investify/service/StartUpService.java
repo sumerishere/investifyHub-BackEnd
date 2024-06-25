@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoderCustom;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -161,11 +161,10 @@ public class StartUpService implements RegexPatterns{
 	
 	
 	
-	
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoderCustom passwordEncoder;
 
-    @Autowired
-    public StartUpService(BCryptPasswordEncoder passwordEncoder) {
+//    @Autowired
+    public StartUpService(BCryptPasswordEncoderCustom passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 	
@@ -407,6 +406,13 @@ public class StartUpService implements RegexPatterns{
 	}
 	
 	
+	//------------Delete investor base on ID --------//
+	
+	public void deleteInvestor(Long id) {
+		investorInfoRepository.deleteById(id);
+	}
+	
+	
          //---------POST API of Investor----------//
 	
 	
@@ -463,7 +469,6 @@ public class StartUpService implements RegexPatterns{
 	    }
 		
         // Validate the email format with lowercase letters only
-        
 	    //String emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$";
 	    String email = info.getMailId();
 	    
@@ -505,6 +510,10 @@ public class StartUpService implements RegexPatterns{
         return investorInfoRepository.save(info);
     }
 	
+	
+	
+	
+	
 	//---------------------------------------------//
 	
 	
@@ -541,9 +550,13 @@ public class StartUpService implements RegexPatterns{
 	
 	//verify User
     public InvestorInfo verifyUser(String username, String password) {
+    	
         Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+        
         if (investorInfoOptional.isPresent()) {
+        	
             InvestorInfo investorInfo = investorInfoOptional.get();
+            
             if (passwordEncoder.matches(password, investorInfo.getPassword())) {
                 return investorInfo;
             }

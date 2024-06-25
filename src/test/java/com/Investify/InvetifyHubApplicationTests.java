@@ -14,6 +14,7 @@ class InvetifyHubApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 	
 	

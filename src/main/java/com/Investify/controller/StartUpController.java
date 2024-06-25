@@ -15,10 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoderCustom;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,10 +63,10 @@ public class StartUpController {
 	AddStartUpRepository  addStartUpRepository;
 	
 
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoderCustom passwordEncoder;
 	
 	@Autowired
-    public StartUpController(BCryptPasswordEncoder passwordEncoder) {
+    public StartUpController(BCryptPasswordEncoderCustom passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
@@ -271,6 +272,14 @@ public class StartUpController {
 	public Optional<InvestorInfo> getCredentials(@RequestParam("username") String username, @RequestParam("password") String password) {
 		return startUpService.getCredentials(username,password);
 	}
+	
+	
+	@DeleteMapping("/delete-investor-id/{id}")
+	public ResponseEntity<?> deleteInvestor(@PathVariable Long id) {
+		startUpService.deleteInvestor(id);
+		return ResponseEntity.ok().build();
+	}
+	
 	
 	
 	@DeleteMapping("/delete-investor")

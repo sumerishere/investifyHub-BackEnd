@@ -2,7 +2,7 @@ package org.springframework.security.crypto.bcrypt;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class BCryptPasswordEncoder {
+public class BCryptPasswordEncoderCustom {
 
 	 public String encode(String password) {
 	        // Generate a salt for the password
