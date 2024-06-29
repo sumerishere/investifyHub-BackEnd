@@ -112,6 +112,12 @@ public class StartUpController {
     }
 	
 	
+	 @GetMapping("/search")
+	 public List<StartUpInfo> searchStartUps(@RequestParam("name") String name) {
+	    return startUpService.searchByCompanyName(name);
+	 }
+	
+	
 	
 	@GetMapping("/get-all")
 	public List<StartUpInfo> getAll(){

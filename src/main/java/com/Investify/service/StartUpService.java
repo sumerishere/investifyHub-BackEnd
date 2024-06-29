@@ -270,6 +270,12 @@ public class StartUpService implements RegexPatterns{
     }
 	
 	
+	//---search company keyword based-----//
+	 public List<StartUpInfo> searchByCompanyName(String name) {
+	        return startUpRepository.findByCompanyNameContaining(name);
+	    }
+	
+	
 //	public void getCompanyNamee(String CompanyName) {
 //		startUpRepository.getByCompanyName(CompanyName);
 //	}

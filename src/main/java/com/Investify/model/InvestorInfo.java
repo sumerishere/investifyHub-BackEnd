@@ -30,8 +30,8 @@ public class InvestorInfo {
 	private String mobileNo;
 	private String mailId;
 	
-	private String username;
-	private String password;
+	private  String username;
+	private  String password;
 	
 	@Lob
 	@Column(columnDefinition = "LONGBLOB")
@@ -90,7 +90,7 @@ public class InvestorInfo {
 	}
 
 
-	public String getUsername() {
+	public  String getUsername() {
 		return username;
 	}
 
