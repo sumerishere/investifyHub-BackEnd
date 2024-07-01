@@ -411,6 +411,12 @@ public class StartUpService implements RegexPatterns{
 		return investorInfoRepository.findAll();
 	}
 	
+	//---search investor api----//
+	
+	public List<InvestorInfo> searchByCInvestorName(String name){
+		return investorInfoRepository.findByInvestorNameContaining(name);
+	}
+	
 	
 	//------------Delete investor base on ID --------//
 	

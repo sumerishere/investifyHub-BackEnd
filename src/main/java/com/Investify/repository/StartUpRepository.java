@@ -18,5 +18,4 @@ public interface StartUpRepository extends JpaRepository<StartUpInfo, Long> {
 	@Query("SELECT s FROM StartUpInfo s WHERE s.companyName LIKE %:name%")
     List<StartUpInfo> findByCompanyNameContaining(@Param("name") String name);
 
-	
 }

@@ -112,7 +112,7 @@ public class StartUpController {
     }
 	
 	
-	 @GetMapping("/search")
+	 @GetMapping("/company-search")
 	 public List<StartUpInfo> searchStartUps(@RequestParam("name") String name) {
 	    return startUpService.searchByCompanyName(name);
 	 }
@@ -212,7 +212,7 @@ public class StartUpController {
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_PDF);
 	        headers.setContentLength(pdfBytes.length);
-           //headers.setContentDispositionFormData("attachment", "startup-pdf.pdf"); // Optionally, you can force download instead of display
+//           headers.setContentDispositionFormData("attachment", "startup-pdf.pdf"); // Optionally, you can force download instead of display
 
 	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 	    }
@@ -225,21 +225,7 @@ public class StartUpController {
 	
 								//--------------------------  Investors APIs ------------------------------//  
 	
-		
-//	@PostMapping("/saveInvestorInfo")
-//	public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {
-//		
-//	    try {
-//	        startUpService.saveInvestor(info);
-//	        startUpService.signUpMail(info.getName(), info.getMailId(), info.getUsername());
-//	        
-//	        return ResponseEntity.ok("Investor information saved successfully.");
-//	    } 
-//	    catch (Exception e) {
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error!!!");
-//	    }
-//	}
-	
+			
 	
 	 @PostMapping("/saveInvestorInfo")
 	    public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {	
@@ -273,6 +259,13 @@ public class StartUpController {
 	public List<InvestorInfo> getInvestorsData(){
 		return startUpService.getAllInvestors();
 	}
+	
+	//----search investor by name api -----//
+	@GetMapping("/investor-search")
+	 public List<InvestorInfo> searchInvestor(@RequestParam("name") String name) {
+	    return startUpService.searchByCInvestorName(name);
+	 }
+
 	
 	@GetMapping("/get-investor")
 	public Optional<InvestorInfo> getCredentials(@RequestParam("username") String username, @RequestParam("password") String password) {

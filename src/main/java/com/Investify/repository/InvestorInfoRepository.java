@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.Investify.model.InvestorInfo;
+import com.Investify.model.StartUpInfo;
 
 @Repository
 public interface InvestorInfoRepository extends JpaRepository<InvestorInfo,Long> {
@@ -21,6 +22,7 @@ public interface InvestorInfoRepository extends JpaRepository<InvestorInfo,Long>
 
 	public Optional<InvestorInfo> findByMailId(String mailId);
 	
-	
+	@Query("SELECT s FROM InvestorInfo s WHERE s.name LIKE %:name%")
+    List<InvestorInfo> findByInvestorNameContaining(@Param("name") String name);
 
 }
