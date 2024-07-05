@@ -309,12 +309,23 @@ public class StartUpService implements RegexPatterns{
 		 startUpInfo.setCompanyUrl(companyUrl);
 		 
 		 try {
+			 
 			  //Mobile number validation
 		      if (mobileNo.matches(MOBILE_NUMBER_PATTERN)) {
 		    	  startUpInfo.setMobileNo(mobileNo);
 		      }
+		      
 		      else {
-		    	  throw new IllegalArgumentException("Invalid mobile number format");
+		    	  
+		    	  String getMobileNo = mobileNo; //getting mobile no. for range check. 
+		    	  
+		    	  if(getMobileNo.length()>12) {
+		    		  //System.out.println("");
+		    		  throw new IllegalArgumentException("mobile number should be in range of 12.");
+		    	  }
+		    	  else {
+		    		  throw new IllegalArgumentException("Invalid mobile number format");
+		    	  }
 		      	}
 		      
 			  //handle for BLOB or large pdf file

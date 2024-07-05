@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoderCustom;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +36,7 @@ import com.Investify.repository.AddStartUpRepository;
 import com.Investify.repository.InvestorInfoRepository;
 import com.Investify.repository.StartUpRepository;
 import com.Investify.service.StartUpService;
+import com.bcryptPasswordEncoder.BCryptPasswordEncoderCustom;
 import com.exceptionHandling.InvalidInvestmentAmountException;
 
 import ch.qos.logback.core.status.Status;
@@ -55,20 +55,7 @@ public class StartUpController {
 	
 	@Autowired
 	StartUpRepository startUpRepository;
-	
-	@Autowired
-	InvestorInfoRepository investorInfoRepository;
-	
-	@Autowired  
-	AddStartUpRepository  addStartUpRepository;
-	
 
-	private final BCryptPasswordEncoderCustom passwordEncoder;
-	
-	@Autowired
-    public StartUpController(BCryptPasswordEncoderCustom passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-	}
 	
 	
 	@PostMapping("/saveData")
@@ -219,6 +206,144 @@ public class StartUpController {
 	 
 	 
 	 //--------------------------------------------------------//
+	    
+	    
+	    @PutMapping("/add-startup")
+		public ResponseEntity<?> updateStartupName(@RequestBody AddStartupRequest request) {
+			
+		    String username = request.getUsername();
+		    String password = request.getPassword();
+		
+		    // Verify user
+		    InvestorInfo investorInfo = startUpService.verifyUser(username, password);
+		    
+		    if (investorInfo == null) {
+		    	
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		    }
+		
+		    try {
+		        // Add startup details
+		    	startUpService.addStartupName(request.getStartupname(), request.getInvestmentAmount(), investorInfo);
+		
+		        // Send mail
+		    	startUpService.SendMail(investorInfo.getName(), investorInfo.getMailId(), request.getStartupname(), request.getInvestmentAmount());
+		
+		    } catch (InvalidInvestmentAmountException ex) {
+		    	
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+		    } 
+		    catch (Exception e) {
+		    	
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		    }
+		
+		    return ResponseEntity.ok().build();
+		}
+		
+		
+		
+		
+		
+		//--------without exception handle -----------//
+		
+		//@PutMapping("/add-startup")
+		//public ResponseEntity<?> updateStartupName(@RequestBody AddStartupRequest request) {
+		//    String username = request.getUsername();
+		//    String password = request.getPassword();
+		//
+		//    // Verify user
+		//    InvestorInfo investorInfo = startUpService.verifyUser(username, password);
+		//    if (investorInfo == null) {
+		//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		//    }
+		//
+		//    // Add startup details
+		//    startUpService.addStartupName(request.getStartupname(), request.getInvestmentAmount(), investorInfo);
+		//
+		//    // Send mail
+		//    try {
+		//        startUpService.SendMail(investorInfo.getName(), investorInfo.getMailId(), request.getStartupname(), request.getInvestmentAmount());
+		//    } catch (Exception e) {
+		//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		//    }
+		//    return ResponseEntity.ok().build();
+		//}
+		
+		
+		
+		
+		//----------------------------------------------------------------//
+		
+		//---old PUT API-------//
+		
+		//@PutMapping("/add-startup")
+		//public ResponseEntity<?> updateStartupName(
+		//		@RequestParam("startupname") String startupname,
+		//		@RequestParam("investmentAmount") String investmentAmount,
+		//		@RequestParam("username") String username, 
+		//		@RequestParam("password")String password ){
+		//    
+		//    InvestorInfo info = startUpService.addStartupName(startupname, investmentAmount, username, password); 
+		//    System.out.println(info);
+		//    
+		//    try {
+		//    	
+		//    	startUpService.SendMail(info.getName(),info.getMailId(),startupname, investmentAmount);
+		//    }
+		//    catch(Exception e){
+		//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		//    }
+		//    return ResponseEntity.ok().build();
+		//}
+		
+		
+		
+		
+		@GetMapping("/get-allStartup")
+		public List<AddStartUp> getAllStartUp(){
+			return startUpService.getAllStartUp();
+		}
+		
+		
+		// @GetMapping("/id-startup")
+		//    public ResponseEntity<?> getAllStartupsByInvestorId(@RequestParam("id") Long investorId) {
+		//	 
+		//        List<AddStartUp> startups = startUpService.getAllStartupsByInvestorId(investorId);
+		//        
+		//        if (startups != null && !startups.isEmpty()) {
+		//        	
+		//            return ResponseEntity.ok(startups);
+		//        } 
+		//        else {
+		//        	
+		//            return ResponseEntity.notFound().build();
+		//        }
+		//    }
+		
+		
+		//-------- Login - Status-----//
+		
+		 @PostMapping("/invested-startups")
+		 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
+			 
+		//	 System.out.println(request.getUsername()+" "+request.getPassword());
+			 
+		     List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(request.getUsername(), request.getPassword());
+		     
+		     if (startups != null && !startups.isEmpty()) {
+		    	 
+		    	 return ResponseEntity.ok(startups);
+		    	 
+		     }
+		     else {
+		            return ResponseEntity.notFound().build();
+		     }
+		 }
+		 
+		 
+		}
+		
 	
 	
 	
@@ -227,241 +352,4 @@ public class StartUpController {
 	
 			
 	
-	 @PostMapping("/saveInvestorInfo")
-	    public ResponseEntity<String> saveInvestor(@RequestBody InvestorInfo info) {	
-		 
-	        try {
-	        	startUpService.saveInvestor(info);
-	            startUpService.signUpMail(info.getName(), info.getMailId(), info.getUsername());
-
-	            return ResponseEntity.ok("Investor information saved successfully.");
-	            
-	        } catch (IllegalArgumentException e) {
-	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-	            
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error!!!");
-	        }
-	    }
-	
-	
-	//----- old code with img ----//
-	
-//	@PostMapping("/saveInvestorInfo")
-//    public String saveInvestor(@RequestPart("info") InvestorInfo info,
-//                               @RequestPart("image") MultipartFile image) {
-//        return startUpService.saveInvestor(info, image);
-//    }
-	
-	
-	
-	@GetMapping("/get-all-investors")
-	public List<InvestorInfo> getInvestorsData(){
-		return startUpService.getAllInvestors();
-	}
-	
-	//----search investor by name api -----//
-	@GetMapping("/investor-search")
-	 public List<InvestorInfo> searchInvestor(@RequestParam("name") String name) {
-	    return startUpService.searchByCInvestorName(name);
-	 }
-
-	
-	@GetMapping("/get-investor")
-	public Optional<InvestorInfo> getCredentials(@RequestParam("username") String username, @RequestParam("password") String password) {
-		return startUpService.getCredentials(username,password);
-	}
-	
-	
-	@DeleteMapping("/delete-investor-id/{id}")
-	public ResponseEntity<?> deleteInvestor(@PathVariable Long id) {
-		startUpService.deleteInvestor(id);
-		return ResponseEntity.ok().build();
-	}
-	
-	
-	
-	@DeleteMapping("/delete-investor")
-	public ResponseEntity<?> deleteInvestor(@RequestParam("username") String username, @RequestParam("password") String password){
-		startUpService.deleteByUsername(username,password);
-		return ResponseEntity.ok().build();
-	}
-	
-	
-//----------------------------------------------------------------//
-	
-	@PutMapping("/add-startup")
-	public ResponseEntity<?> updateStartupName(@RequestBody AddStartupRequest request) {
-		
-	    String username = request.getUsername();
-	    String password = request.getPassword();
-
-	    // Verify user
-	    InvestorInfo investorInfo = startUpService.verifyUser(username, password);
-	    
-	    if (investorInfo == null) {
-	    	
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	    }
-
-	    try {
-	        // Add startup details
-	        startUpService.addStartupName(request.getStartupname(), request.getInvestmentAmount(), investorInfo);
-
-	        // Send mail
-	        startUpService.SendMail(investorInfo.getName(), investorInfo.getMailId(), request.getStartupname(), request.getInvestmentAmount());
-
-	    } catch (InvalidInvestmentAmountException ex) {
-	    	
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-	    } 
-	    catch (Exception e) {
-	    	
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	    }
-
-	    return ResponseEntity.ok().build();
-	}
-
-	
-	
-	
-	
-	//--------without exception handle -----------//
-	
-//	@PutMapping("/add-startup")
-//	public ResponseEntity<?> updateStartupName(@RequestBody AddStartupRequest request) {
-//	    String username = request.getUsername();
-//	    String password = request.getPassword();
-//
-//	    // Verify user
-//	    InvestorInfo investorInfo = startUpService.verifyUser(username, password);
-//	    if (investorInfo == null) {
-//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//	    }
-//
-//	    // Add startup details
-//	    startUpService.addStartupName(request.getStartupname(), request.getInvestmentAmount(), investorInfo);
-//
-//	    // Send mail
-//	    try {
-//	        startUpService.SendMail(investorInfo.getName(), investorInfo.getMailId(), request.getStartupname(), request.getInvestmentAmount());
-//	    } catch (Exception e) {
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//	    }
-//	    return ResponseEntity.ok().build();
-//	}
-
-	
-	
-	
-//----------------------------------------------------------------//
-	
-//---old PUT API-------//
-
-//	@PutMapping("/add-startup")
-//    public ResponseEntity<?> updateStartupName(
-//    		@RequestParam("startupname") String startupname,
-//    		@RequestParam("investmentAmount") String investmentAmount,
-//    		@RequestParam("username") String username, 
-//    		@RequestParam("password")String password ){
-//        
-//        InvestorInfo info = startUpService.addStartupName(startupname, investmentAmount, username, password); 
-//        System.out.println(info);
-//        
-//        try {
-//        	
-//        	startUpService.SendMail(info.getName(),info.getMailId(),startupname, investmentAmount);
-//        }
-//        catch(Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//        return ResponseEntity.ok().build();
-//    }
-	
-	
-	
-	
-	@GetMapping("/get-allStartup")
-	public List<AddStartUp> getAllStartUp(){
-		return startUpService.getAllStartUp();
-	}
-	
-	
-//	 @GetMapping("/id-startup")
-//	    public ResponseEntity<?> getAllStartupsByInvestorId(@RequestParam("id") Long investorId) {
-//		 
-//	        List<AddStartUp> startups = startUpService.getAllStartupsByInvestorId(investorId);
-//	        
-//	        if (startups != null && !startups.isEmpty()) {
-//	        	
-//	            return ResponseEntity.ok(startups);
-//	        } 
-//	        else {
-//	        	
-//	            return ResponseEntity.notFound().build();
-//	        }
-//	    }
-	
-	
-	//-------- Login - Status-----//
-	
-	 @PostMapping("/invested-startups")
-	 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
-		 
-//		 System.out.println(request.getUsername()+" "+request.getPassword());
-		 
-         List<AddStartUp> startups = startUpService.getAllStartupsByUsernameAndPassword(request.getUsername(), request.getPassword());
-         
-         if (startups != null && !startups.isEmpty()) {
-        	 
-        	 return ResponseEntity.ok(startups);
-        	 
-	     }
-         else {
-	            return ResponseEntity.notFound().build();
-	     }
-	 }
 	 
-	 
-}
-
-
-
-//----------------------------Deprecated code ------------//
-
-//@PutMapping("/add-startup")
-//public ResponseEntity<?> addStartupName(@RequestBody AddStartUp request) {
-//  String startupName = request.getStartupName();
-//  String investmentAmount = request.getInvestmentAmount();
-//  String username = request.getUsername();
-//  String password = request.getPassword();
-//
-//  // Find investor by username and validate password
-//  Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
-//  if (investorInfoOptional.isPresent()) {
-//      InvestorInfo investorInfo = investorInfoOptional.get();
-//      if (investorInfo.getPassword().equals(password)) {
-//          // Check if startupName already exists for the investor
-//          boolean startupExists = addStartUpRepository.existsByStartupnameAndInvestorInfo(startupName, investorInfo);
-//          
-//          if (!startupExists) {
-//              // Create new AddStartUp entity
-//              AddStartUp addStartUp = new AddStartUp(startupName, investmentAmount, investorInfo);
-//              try {
-//                  addStartUpRepository.save(addStartUp);
-//                  return ResponseEntity.ok().build();
-//              } 
-//              catch (Exception e) {
-//                  return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//              }
-//          } else {
-//              return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//          }
-//      } else {
-//          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//      }
-//  } else {
-//      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//  }
-//}

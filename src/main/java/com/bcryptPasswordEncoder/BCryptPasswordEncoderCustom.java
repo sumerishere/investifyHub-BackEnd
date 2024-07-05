@@ -1,4 +1,4 @@
-package org.springframework.security.crypto.bcrypt;
+package com.bcryptPasswordEncoder;
 
 import org.mindrot.jbcrypt.BCrypt;
 
