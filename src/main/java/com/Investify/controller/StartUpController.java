@@ -49,6 +49,8 @@ import jakarta.transaction.Transactional;
 @CrossOrigin("*")
 public class StartUpController {
 	
+	@Autowired
+	AddStartUpRepository addStartUpRepository;
 	
 	@Autowired
 	StartUpService startUpService;
@@ -241,6 +243,12 @@ public class StartUpController {
 		    return ResponseEntity.ok().build();
 		}
 		
+	    
+	    @GetMapping("/get-invested-startup")
+	    public List<AddStartUp> getAllInvestedStartUps(){
+	    	
+	    	return startUpService.getAllInvestedStartUp();
+	    }
 		
 		
 		

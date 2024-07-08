@@ -536,7 +536,11 @@ public class StartUpService implements RegexPatterns{
 		
 		
 
-	  
+	  //-----get all invested startup ------//
+		
+		public List<AddStartUp> getAllInvestedStartUp(){
+			return addStartUpRepository.findAll();
+		}
 	  
 	 
 	             //---------------Authentication API------------------//
