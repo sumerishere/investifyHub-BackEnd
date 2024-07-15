@@ -1,5 +1,7 @@
 package com.Investify.model;
 
+import org.hibernate.annotations.Formula;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -51,6 +53,7 @@ public class AddStartUp {
     public void setInvestorInfo(InvestorInfo investorInfo) {
         this.investorInfo = investorInfo;
     }
-	
+
+    
 	
 }

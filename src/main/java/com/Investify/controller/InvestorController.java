@@ -69,6 +69,8 @@ public class InvestorController {
 	//    return startUpService.saveInvestor(info, image);
 	//}
 
+	
+	
 
 
 	@GetMapping("/get-all-investors")

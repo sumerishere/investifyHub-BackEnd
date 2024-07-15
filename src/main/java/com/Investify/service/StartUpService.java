@@ -1,14 +1,18 @@
 package com.Investify.service;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+//import org.apache.logging.log4j.util.PropertySource.Comparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Investify.model.AddStartUp;
 import com.Investify.model.InvestorInfo;
+import com.Investify.model.InvestorResponse;
 import com.Investify.model.StartUpInfo;
 import com.Investify.model.StartUpRegistraion;
 import com.Investify.repository.AddStartUpRepository;
@@ -380,6 +385,36 @@ public class StartUpService implements RegexPatterns{
 
 	  
 	  //--------------- Login API -------------//
+	    
+	    
+//	    public Optional<InvestorResponse> getAllStartupsByUsernameAndPassword(String username, String password) {
+//	        Optional<InvestorInfo> investorInfoOptional = investorInfoRepository.findByUsername(username);
+//
+//	        if (investorInfoOptional.isPresent()) {
+//	        	
+//	            InvestorInfo investorInfo = investorInfoOptional.get();
+//	            
+//	            if (passwordEncoder.matches(password, investorInfo.getPassword())) {
+//	            	
+//	            	List<AddStartUp> startups = addStartUpRepository.findByInvestorInfo(investorInfo);
+//	            	
+//	                InvestorResponse response = new InvestorResponse(investorInfo, startups);
+//	                
+//	                return Optional.of(response);
+//	                
+//	            } 
+//	            else {
+//	                System.out.println("Incorrect password!");
+//	            }
+//	        }
+//	        else {
+//	            System.out.println("Username Not Exist!!");
+//	        }
+//	        return Optional.empty(); 
+//	    }
+
+	    
+	    
 	  
 	  public List<AddStartUp> getAllStartupsByUsernameAndPassword(String username, String password) {
 	       
@@ -388,7 +423,52 @@ public class StartUpService implements RegexPatterns{
 	        if (investorInfoOptional.isPresent()){
 	        	
 	        	if(passwordEncoder.matches(password, investorInfoOptional.get().getPassword())) {
-	        		return addStartUpRepository.findByInvestorInfo(investorInfoOptional.get());
+	        		
+	        		 List<AddStartUp> startups = addStartUpRepository.findByInvestorInfo(investorInfoOptional.get());
+
+	                 // Sort the startups by investmentAmount
+	        		 //note : this sorting uses TimSort algorithm (in-place)
+	                 Collections.sort(startups, new Comparator<AddStartUp>() {
+	                	 
+	                	 @Override
+	                     public int compare(AddStartUp s1, AddStartUp s2) {
+	                		 
+	                         try {
+	                             // Convert investmentAmount to long for comparison
+	                             Long amount_a = parseAmount(s1.getInvestmentAmount());
+	                             Long amount_b = parseAmount(s2.getInvestmentAmount());
+	                             
+	                             return amount_a.compareTo(amount_b); // Ascending order
+	                             
+	                         } 
+	                         catch (NumberFormatException e) {
+	                             // Handle the case where investmentAmount is not a valid number
+	                             e.printStackTrace();
+	                             return 0;
+	                         }
+	                     }
+
+	                     // Helper method to parse the investment amount int,long both in string form.
+	                     private Long parseAmount(String amountStr) throws NumberFormatException {
+	                    	 
+	                         DecimalFormat df = new DecimalFormat();
+	                         
+	                         df.setParseBigDecimal(true);
+	                         df.setParseIntegerOnly(true);
+	                         df.setGroupingUsed(true);
+	                         
+	                         try {
+	                             return df.parse(amountStr).longValue();
+	                         } 
+	                         catch (ParseException e) {
+	                             throw new NumberFormatException("Invalid number format: " + amountStr);
+	                         }
+	                     }
+	                 });
+
+	                 return startups;
+	        		
+	                 //return addStartUpRepository.findByInvestorInfo(investorInfoOptional.get());
 	        	}
 	        	else {
 	        		System.out.println("Incorrect password!");
@@ -541,7 +621,16 @@ public class StartUpService implements RegexPatterns{
 		public List<AddStartUp> getAllInvestedStartUp(){
 			return addStartUpRepository.findAll();
 		}
-	  
+	     
+//		
+//		 @Transactional
+//		 public AddStartUp saveAddStartUp(AddStartUp addStartUp) {
+//		     // Set the investor name before saving
+//		     if (addStartUp.getInvestorInfo() != null) {
+//		         addStartUp.setInvestorName(addStartUp.getInvestorInfo().getName());
+//		     }
+//		     return addStartUpRepository.save(addStartUp);
+//		 }
 	 
 	             //---------------Authentication API------------------//
 	

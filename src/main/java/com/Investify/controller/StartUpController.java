@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.Investify.model.AddStartUp;
 import com.Investify.model.AddStartupRequest;
 import com.Investify.model.InvestorInfo;
+import com.Investify.model.InvestorResponse;
 import com.Investify.model.StartUpInfo;
 import com.Investify.model.StartUpRegistraion;
 import com.Investify.repository.AddStartUpRepository;
@@ -57,6 +58,8 @@ public class StartUpController {
 	
 	@Autowired
 	StartUpRepository startUpRepository;
+	
+	
 
 	
 	
@@ -332,6 +335,20 @@ public class StartUpController {
 		
 		//-------- Login - Status-----//
 		
+		
+//	    @PostMapping("/invested-startups")
+//	    public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
+//	        Optional<InvestorResponse> investorResponse = startUpService.getAllStartupsByUsernameAndPassword(request.getUsername(), request.getPassword());
+//	        
+//	        if (investorResponse.isPresent()) {
+//	            return ResponseEntity.ok(investorResponse.get());
+//	        } else {
+//	            return ResponseEntity.status(401).body("Invalid username or password");
+//	        }
+//	    }
+
+
+		
 		 @PostMapping("/invested-startups")
 		 public ResponseEntity<?> getAllStartupsByUsernameAndPassword(@RequestBody SignInRequest request) {
 			 
@@ -348,10 +365,9 @@ public class StartUpController {
 		            return ResponseEntity.notFound().build();
 		     }
 		 }
-		 
-		 
-		}
-		
+//}
+
+}
 	
 	
 	

@@ -22,6 +22,8 @@ public interface InvestorInfoRepository extends JpaRepository<InvestorInfo,Long>
 
 	public Optional<InvestorInfo> findByMailId(String mailId);
 	
+	
+	
 	@Query("SELECT s FROM InvestorInfo s WHERE s.name LIKE %:name%")
     List<InvestorInfo> findByInvestorNameContaining(@Param("name") String name);
 
